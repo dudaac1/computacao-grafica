@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL</title>
+
+    <style>
+        @import url("https://webgl2fundamentals.org/webgl/resources/webgl-tutorials.css");
+        body {
+            margin: 0;
+        }
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+
+</head>
+<body onload="main()">
+    <canvas id="canvas"></canvas>
+    <div id="uiContainer">
+    <div id="ui">
+        <div id="x1"></div>
+        <div id="y1"></div>
+        <div id="angle1"></div>
+        <div id="scaleX1"></div>
+        <div id="scaleY1"></div>
+        <div id="x2"></div>
+        <div id="y2"></div>
+        <div id="angle2"></div>
+        <div id="scaleX2"></div>
+        <div id="scaleY2"></div>
+    </div>
+</div>
+<!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See https://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
+and https://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-lessons-ui.js"></script>
+<script src="script.js"></script>
+
+    <!--
+    - tarefa 2: animação
+    -->
+    
+</body>
+</html>
