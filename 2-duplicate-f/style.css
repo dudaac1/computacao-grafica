@@ -13,7 +13,7 @@ canvas {
 button {
   position: fixed;
   z-index: 10;
-  top: 18em;
+  bottom: 5em;
   right: 5em;
   font-weight: bold;
   color: lightskyblue;

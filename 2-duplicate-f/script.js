@@ -6,12 +6,17 @@
 
 "use strict";
 
+// GLOBAL VARIABLES
+
+// must use something struct-like to avoid global variables
+// and then pass the struct and shapes array
 var gl = null;
 var program = null;
 var vao = null;
 var resolutionUniformLocation = null;
 var colorLocation = null;
 var matrixLocation = null;
+
 var shapes = [{
     translation: [150, 150],
     rotation: 0,
@@ -22,7 +27,19 @@ var shapes = [{
     rotation: 0,
     scale: [1, 1],
     color: [Math.random(), Math.random(), Math.random(), 1]
+}, {
+    translation: [160, 160],
+    rotation: 0,
+    scale: [1, 1],
+    color: [Math.random(), Math.random(), Math.random(), 1]
+}, {
+    translation: [165, 165],
+    rotation: 0,
+    scale: [1, 1],
+    color: [Math.random(), Math.random(), Math.random(), 1]
 }];
+
+// SHADERS
 
 var vertexShaderSource = `#version 300 es
 
@@ -67,12 +84,7 @@ void main() {
 }
 `;
 
-function setBtnEvent() {
-    var btn = document.getElementById("btn");
-    btn.addEventListener("click", fAnimate);
-}
-
-setBtnEvent();
+// WEBGL RELATED CODE
 
 function main() {
     var canvas = document.querySelector("#canvas");
@@ -87,17 +99,13 @@ function main() {
     colorLocation = gl.getUniformLocation(program, "u_color");
     matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-    var positionBuffer1 = gl.createBuffer();
-    var positionBuffer2 = gl.createBuffer();
+    var positionBuffer = gl.createBuffer();
 
     vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
     gl.enableVertexAttribArray(positionAttributeLocation);
     
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer1); // F1
-    setGeometry();
-    
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer2); // F2
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); 
     setGeometry();
     
     var size = 2;          // 2 components per iteration
@@ -111,6 +119,8 @@ function main() {
 
     setupUI(0); // Setup a ui for F v.1
     setupUI(1); // Setup a ui for F v.2
+    setupUI(2); // Setup a ui for F v.2
+    setupUI(3); // Setup a ui for F v.2
     
     function setupUI(index) {
         webglLessonsUI.setupSlider("#x" + index, { value: shapes[index].translation[0], slide: updatePosition(index, 0), max: gl.canvas.width });
@@ -143,59 +153,45 @@ function main() {
     }
 }
 
-function fAnimate(event) {
-    event.srcElement.disabled = true;
-    requestAnimationFrame(animation);
-}
-
-var then = 0;
-function animation(now) {
-    now *= 0.001;
-    var deltaTime = now - then;
-    then = now;
-    shapes[1].rotation += 1.2 * deltaTime;
-    drawScene();
-    if (now < 5) // 5 seconds
-        requestAnimationFrame(animation);
-
-    // how to update ui 
-    // how to reactivate button
-}
-
 function drawScene () {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     
-    gl.clearColor(0, 0, 0, 0); // Clear the canvas
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // gl.clearColor(0, 0, 0, 0); // Clear the canvas
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     gl.useProgram(program);
     gl.bindVertexArray(vao);
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    // F1
-    gl.uniform4fv(colorLocation, shapes[0].color); 
-    var translationMatrix = m3.translation(shapes[0].translation[0], shapes[0].translation[1]);
-    var rotationMatrix = m3.rotation(shapes[0].rotation);
-    var scaleMatrix = m3.scaling(shapes[0].scale[0], shapes[0].scale[1]);
-    var matrix = m3.multiply(translationMatrix, rotationMatrix);
-    matrix = m3.multiply(matrix, scaleMatrix);
-    gl.uniformMatrix3fv(matrixLocation, false, matrix);
+    drawShape(0);
+    drawShape(1);
+    drawShape(2);
+    drawShape(3);
 
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = 18;
-    gl.drawArrays(primitiveType, offset, count); 
-    // F2
-    gl.uniform4fv(colorLocation, shapes[1].color); 
-    var translationMatrix = m3.translation(shapes[1].translation[0], shapes[1].translation[1]);
-    var rotationMatrix = m3.rotation(shapes[1].rotation);
-    var scaleMatrix = m3.scaling(shapes[1].scale[0], shapes[1].scale[1]);
-    var matrix = m3.multiply(translationMatrix, rotationMatrix);
-    matrix = m3.multiply(matrix, scaleMatrix);
-    gl.uniformMatrix3fv(matrixLocation, false, matrix);
-    gl.drawArrays(primitiveType, offset, count); 
+    var translationMatrix;
+    var rotationMatrix;
+    var scaleMatrix;
+    var matrix;
+
+    function drawShape(index) {
+        gl.uniform4fv(colorLocation, shapes[index].color); 
+        translationMatrix = m3.translation(shapes[index].translation[0], shapes[index].translation[1]);
+        rotationMatrix = m3.rotation(shapes[index].rotation);
+        scaleMatrix = m3.scaling(shapes[index].scale[0], shapes[index].scale[1]);
+        matrix = m3.multiply(translationMatrix, rotationMatrix);
+        matrix = m3.multiply(matrix, scaleMatrix);
+        gl.uniformMatrix3fv(matrixLocation, false, matrix);
+    
+        // var primitiveType = gl.TRIANGLES;
+        // var offset = 0;
+        // var count = 18;
+        // gl.drawArrays(primitiveType, offset, count); 
+        gl.drawArrays(gl.TRIANGLES, 0, 18); 
+    }
 }
+
+
 
 // Fill the current ARRAY_BUFFER buffer
 // with the values that define a letter 'F'.
@@ -290,4 +286,38 @@ var m3 = {
     },
   };
 
-main();
+
+
+// OTHER FUNCTIONS
+
+function setBtnEvent() {
+    var btn = document.getElementById("btn");
+    btn.addEventListener("click", fAnimate);
+}
+setBtnEvent();
+
+function fAnimate(event) {
+    event.srcElement.disabled = true;
+    requestAnimationFrame(animation);
+
+    var then = 0;
+    var deltaTime;
+
+    function animation(now) {
+        now *= 0.001;
+        deltaTime = now - then;
+        then = now;
+        drawScene();
+        shapes[1].rotation += 1.2 * deltaTime;
+        if (now < 5) // 5 seconds
+            requestAnimationFrame(animation);
+        else {
+            var btn = document.getElementById("btn");
+            btn.disabled = false;
+            // now = 0; // doesn't work
+            // how to reset so the animation starts again?
+        }
+    
+        // how to update ui while animation is on
+    }
+}
