@@ -7,6 +7,7 @@
 "use strict";
 
 // GLOBAL VARIABLES
+var numberFs = 2; 
 
 // must use something struct-like to avoid global variables
 // and then pass the struct and shapes array
@@ -17,30 +18,11 @@ var resolutionUniformLocation = null;
 var colorLocation = null;
 var matrixLocation = null;
 
-var shapes = [{
-    translation: [150, 150],
-    rotation: 0,
-    scale: [1, 1],
-    color: [Math.random(), Math.random(), Math.random(), 1]
-}, {
-    translation: [155, 155],
-    rotation: 0,
-    scale: [1, 1],
-    color: [Math.random(), Math.random(), Math.random(), 1]
-}, {
-    translation: [160, 160],
-    rotation: 0,
-    scale: [1, 1],
-    color: [Math.random(), Math.random(), Math.random(), 1]
-}, {
-    translation: [165, 165],
-    rotation: 0,
-    scale: [1, 1],
-    color: [Math.random(), Math.random(), Math.random(), 1]
-}];
+var shapes = [];
+
+createShapesAndUI(numberFs);
 
 // SHADERS
-
 var vertexShaderSource = `#version 300 es
 
 // an attribute is an input (in) to a vertex shader.
@@ -85,7 +67,6 @@ void main() {
 `;
 
 // WEBGL RELATED CODE
-
 function main() {
     var canvas = document.querySelector("#canvas");
     gl = canvas.getContext("webgl2");
@@ -117,10 +98,8 @@ function main() {
     
     drawScene();
 
-    setupUI(0); // Setup a ui for F v.1
-    setupUI(1); // Setup a ui for F v.2
-    setupUI(2); // Setup a ui for F v.2
-    setupUI(3); // Setup a ui for F v.2
+    for (var i = 0; i < numberFs; ++i)
+        setupUI(i);
     
     function setupUI(index) {
         webglLessonsUI.setupSlider("#x" + index, { value: shapes[index].translation[0], slide: updatePosition(index, 0), max: gl.canvas.width });
@@ -164,10 +143,8 @@ function drawScene () {
     gl.bindVertexArray(vao);
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
-    drawShape(0);
-    drawShape(1);
-    drawShape(2);
-    drawShape(3);
+    for (var i = 0; i < numberFs; ++i)
+        drawShape(i);
 
     var translationMatrix;
     var rotationMatrix;
@@ -190,8 +167,6 @@ function drawScene () {
         gl.drawArrays(gl.TRIANGLES, 0, 18); 
     }
 }
-
-
 
 // Fill the current ARRAY_BUFFER buffer
 // with the values that define a letter 'F'.
@@ -286,38 +261,65 @@ var m3 = {
     },
   };
 
-
-
 // OTHER FUNCTIONS
+function createShapesAndUI(number) {
+    var uiDiv = document.getElementById("ui");
+    for (var i = 0; i < number; ++i) {
+        var x = document.createElement("div");
+        x.setAttribute("id", "x" + i);
+        uiDiv.appendChild(x);
+        var y = document.createElement("div");
+        y.setAttribute("id", "y" + i);
+        uiDiv.appendChild(y);
+        var angle = document.createElement("div");
+        angle.setAttribute("id", "angle" + i);
+        uiDiv.appendChild(angle);
+        var scaleX = document.createElement("div");
+        scaleX.setAttribute("id", "scaleX" + i);
+        uiDiv.appendChild(scaleX);
+        var scaleY = document.createElement("div");
+        scaleY.setAttribute("id", "scaleY" + i);
+        uiDiv.appendChild(scaleY);
+        shapes.push({
+            translation: [150 + (i * 10), 150 + (i * 10)],
+            rotation: 0,
+            scale: [1, 1],
+            color: [Math.random(), Math.random(), Math.random(), 1]
+        });
+    }
+}
 
 function setBtnEvent() {
-    var btn = document.getElementById("btn");
-    btn.addEventListener("click", fAnimate);
+    if (numberFs > 0) {
+        var btn = document.getElementById("btn");
+        btn.addEventListener("click", fAnimate);
+    }
 }
 setBtnEvent();
 
 function fAnimate(event) {
     event.srcElement.disabled = true;
+    var start = new Date().getTime();
+    var then = start;
+    var now, deltaTime;
     requestAnimationFrame(animation);
 
-    var then = 0;
-    var deltaTime;
-
-    function animation(now) {
-        now *= 0.001;
-        deltaTime = now - then;
+    function animation() {
+        now = new Date().getTime();
+        deltaTime = (now - then) * 0.001;
         then = now;
+        shapes[numberFs-1].rotation += 1.2 * deltaTime;
         drawScene();
-        shapes[1].rotation += 1.2 * deltaTime;
-        if (now < 5) // 5 seconds
+        if (now < start + 5000) // 5 seconds
             requestAnimationFrame(animation);
         else {
             var btn = document.getElementById("btn");
             btn.disabled = false;
-            // now = 0; // doesn't work
-            // how to reset so the animation starts again?
         }
     
         // how to update ui while animation is on
     }
 }
+
+// CALLING
+main();
