@@ -1,0 +1,172 @@
+@import url('./resources/fonts/Roboto-Light.ttf');
+@import url('./resources/fonts/Roboto-Regular.ttf');
+@import url('./resources/fonts/Roboto-Bold.ttf');
+
+:root {
+  --primary-color: palevioletred;
+  --light-color: lightpink;
+  --white-color: floralwhite;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto Light', sans-serif;
+  color: black;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  background-color:var(--white-color);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--primary-color);
+  padding: 25px 2.5vw;
+  font-size: 1rem;
+}
+
+main {
+  position: absolute;
+  /* background-color: aqua; */
+  width: 100%;
+  padding: 1rem;
+  top: 120px;
+  bottom: 60px;
+  /* width: 50%; */
+  /* height: 50%; */
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  background-color: var(--light-color);
+  width: 100%;
+  padding: 25px 2.5vw;
+  font-size: 1rem;
+}
+
+/*****************************************************************/
+/*                             PAGE                              */
+
+.container {
+  max-width: 1500px;
+  min-width: 300px;
+  margin: 0 auto;
+  overflow: auto;
+  padding: 0 1.5rem;
+  
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+main .flex { flex-wrap: wrap; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/*****************************************************************/
+/*                              FONT                             */
+
+h1 {
+  font-size: 3rem;
+  font-family: 'Roboto Bold', sans-serif;
+}
+
+a { 
+  color: var(--primary-color);
+  text-decoration: underline dotted var(--primary-color) 1px; 
+}
+
+a:hover { 
+  color: var(--light-color);
+  text-decoration-style: solid;
+}
+
+/*****************************************************************/
+/*                             OTHERS                            */
+
+.icon {
+  height: 2px;
+}
+
+.bg-canvas {
+  width: 100%;
+  position: fixed;
+  z-index: -10;
+}
+
+.card {
+  height: 22rem;
+  width: 15rem;
+  background-color: transparent;
+  z-index: 1;
+  margin: 0.2rem;
+  padding: 0.2rem;
+  border-radius: 1rem;
+}
+
+.canvas {
+  height: 75%;
+  border: 1px solid black;
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.info {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.info h3 { font-size: 1.5rem; }
+.info button {
+  padding: 0.2rem 0.6rem;
+  margin: 0.2rem;
+  cursor: pointer;
+}
+
+
+/*****************************************************************/
+/*                           RESPONSIVE                          */
+
+@media(max-width: 768px) {
+  header .container >* { 
+    margin: 0.5rem 0;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  main { 
+    top: 13rem; 
+    text-align: center;
+  }
+
+  /* main .container { padding: 0; } */
+
+  .grid { grid-template-columns: 1fr; }
+
+  .flex { flex-direction: column; }
+  main .flex { 
+    flex-direction: row; 
+    /* text-align: center; */
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+}
