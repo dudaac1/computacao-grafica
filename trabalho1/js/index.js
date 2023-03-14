@@ -13,14 +13,6 @@ const vShader2D = `#version 300 es
     }
 `;
 
-const vShader3D = `#version 300 es
-  in vec4 a_position;
-  uniform mat4 u_matrix;
-  void main() {
-    gl_Position = u_matrix * a_position;
-  }
-`;
-
 const fShader = `#version 300 es
     precision highp float;
     uniform vec4 u_color;
@@ -31,11 +23,15 @@ const fShader = `#version 300 es
 `;
 
 var program = null;
+var vao = null;
+var resolutionUniformLocation = null;
+var colorLocation = null;
+var matrixLocation = null;
 
 function main(NUMBER_OBJS, NUM_BG_OBJ, bgShapes, shapes) {
   var bgGl = getGLContext("canvas-main-bg");
   program = createProgram(bgGl, vShader2D, fShader);
-  webGl(bgGl, program);
+  setWebGl(bgGl, program);
   for (let j = 0; j < NUM_BG_OBJ; ++j) 
     drawShape(bgGl, bgShapes[j]);
 
@@ -46,11 +42,11 @@ function main(NUMBER_OBJS, NUM_BG_OBJ, bgShapes, shapes) {
   for (let i = 0; i < NUMBER_OBJS; ++i) {
     gl = getGLContext(`canvas${i}`);
     program = createProgram(gl, vShader2D, fShader);
-    webGl(gl, program);
+    setWebGl(gl, program);
     drawShape(gl, shapes[i]);
   }
 
-  function webGl(gl, program) {
+  function setWebGl(gl, program) {
     var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
     resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
     colorLocation = gl.getUniformLocation(program, "u_color");
@@ -100,46 +96,95 @@ function main(NUMBER_OBJS, NUM_BG_OBJ, bgShapes, shapes) {
   }
 }
 
-function getGLContext(canvas) {
-  var gl = document.getElementById(canvas).getContext("webgl2");
-  if (!gl) {
-    console.log("WebGL não encontrado.");
-    return undefined;
-  }
-  return gl;
+"use strict";
+
+const NUM_BG_OBJS = 3;
+const NUMBER_OBJS = 9;
+const MAX_VALUE = 100;
+// let GL;
+
+
+// canvas do fundo
+function generateBackground() {
+  var main = document.getElementById("main-container");
+  var canvas = document.createElement("canvas");
+  canvas.setAttribute("id", "canvas-main-bg");
+  canvas.classList = "bg-canvas";
+  main.appendChild(canvas);
 }
 
-function createProgram(gl, vertex, fragment) {
-  var vShader = createShader(gl, vertex, gl.VERTEX_SHADER);
-  var fShader = createShader(gl, fragment, gl.FRAGMENT_SHADER);
-
-	var program = gl.createProgram();
-  gl.attachShader(program, vShader);
-  gl.attachShader(program, fShader);
-  gl.linkProgram(program);
-  var success = gl.getProgramParameter(program, gl.LINK_STATUS);
-  if (success) return program;
-
-  console.log("Problema com programa WebGL.");
-  console.log(gl.getProgramInfoLog(program));
-  gl.deleteProgram(program);
-  return undefined;
-
-  function createShader(gl, source, type) {
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    if (success) return shader;
+function generateCards() {
+  var main = document.getElementById("main-container");
   
-    console.log(`Problema com Shader WebGL: ${type}.`);
-    console.log(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return undefined;
+  var card, canvas, btn, text, info;
+  for (let i = 0; i < NUMBER_OBJS; ++i) {
+    card = document.createElement("div");
+    card.classList = "card";
+    card.setAttribute("id", `card${i}`);
+    
+    canvas = document.createElement("canvas");
+    canvas.setAttribute("id", `canvas${i}`);
+    canvas.classList = "canvas";
+    card.appendChild(canvas);
+
+    info = document.createElement("div");
+    info.classList = "info";
+    text = document.createElement("h3");
+    text.textContent = `R$ ${cardShapes[i].price}`;
+    info.appendChild(text);
+
+    btn = document.createElement("button");
+    btn.textContent = "comprar";
+    btn.classList = "btn";
+    btn.addEventListener("click", function() { buyButton(i)});
+    info.appendChild(btn);
+    card.appendChild(info);
+
+    main.appendChild(card);
   }
 }
 
-var vao = null;
-var resolutionUniformLocation = null;
-var colorLocation = null;
-var matrixLocation = null;
+function generateShapes(number,  mult1, mult2) {
+  var shapes = [];
+  var translation;
+  var scale;
+  
+  for (let i = 0; i < number; ++i) {
+    if (mult1 == 1) 
+      translation = [100, 100];
+    else 
+      translation = [(i * mult1) + 100, (i * mult1) + 100];
+
+    if (mult2 == 1)
+      scale = [0.2, 0.2];
+    else 
+      scale = [0.2 * mult2, 0.2 * mult2];
+
+    shapes.push({
+      translation,
+      rotation: 0,
+      scale,
+      color: [Math.random(), Math.random(), Math.random(), 1],
+      price: Math.round(Math.random() * 50)
+    });
+  }
+  return shapes;
+}
+
+function buyButton(numCanvas) {
+  console.log(`item ${numCanvas} comprado: R$ ${cardShapes[numCanvas].price}`);
+}
+
+
+// calling functions
+
+generateBackground();
+var bgShapes = generateShapes(NUM_BG_OBJS, 95, 5);
+var cardShapes = generateShapes(NUMBER_OBJS, 1, 1);
+generateCards();
+
+main(NUMBER_OBJS, NUM_BG_OBJS, bgShapes, cardShapes);
+
+
+
+
