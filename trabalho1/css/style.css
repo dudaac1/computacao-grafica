@@ -114,7 +114,7 @@ a:hover {
 .card {
   height: 22rem;
   width: 15rem;
-  background-color: transparent;
+  /* background-color: transparent; */
   z-index: 1;
   margin: 0.2rem;
   padding: 0.2rem;

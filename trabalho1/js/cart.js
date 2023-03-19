@@ -1,11 +1,13 @@
 "use strict";
 
 const vShader2 = `#version 300 es
-  in vec4 a_position;
   uniform mat4 u_matrix;
   uniform float u_PointSize;
+
+  in vec4 a_position;
   in vec4 a_color;
   out vec4 v_color;
+
   void main() {
     gl_Position = u_matrix * a_position;
     gl_PointSize = u_PointSize;
@@ -15,8 +17,10 @@ const vShader2 = `#version 300 es
 
 const fShader = `#version 300 es
     precision highp float;
+
     in vec4 v_color;
     out vec4 outColor;
+
     void main() {
       outColor = v_color;
     }
@@ -41,7 +45,7 @@ function main() {
   var gl = getGLContext("card-canvas");
   program = createProgram(gl, vShader2, fShader);
 
-  const pointSize = 10.0; // set point size to 10 pixels
+  // const pointSize = 10.0; // set point size to 10 pixels
   u_PointSize = gl.getUniformLocation(program, "u_PointSize");
   positionAttribLocation = gl.getAttribLocation(program, "a_position");
   colorAttribLocation =  gl.getAttribLocation(program, "a_color");
@@ -102,6 +106,7 @@ function main() {
 
     // shape.rotation[0] += 1.2 * deltaTime;
     // shape.rotation[1] += 1.8 * deltaTime;
+    shape.rotation[0] += Math.sin(0.2 * deltaTime);
     shape.rotation[1] += 1.5 * deltaTime;
     // shape.rotation[2] += 1.4 * deltaTime;
 
@@ -116,7 +121,7 @@ function main() {
     // gl.uniform4fv(colorLocation, shape.color); 
     gl.uniform1f(u_PointSize, 10);
   
-    var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
+    var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 1000);
     matrix = m4.translate(matrix, shape.translation[0], shape.translation[1], shape.translation[2]);
     matrix = m4.xRotate(matrix, shape.rotation[0]);
     matrix = m4.yRotate(matrix, shape.rotation[1]);
@@ -125,10 +130,7 @@ function main() {
   
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
   
-    var primitiveType = gl.TRIANGLES;
-    var offset = 0;
-    var count = 12 * 3;
-    gl.drawArrays(primitiveType, offset, count);
+    gl.drawArrays(gl.TRIANGLES, 0, 12*3);
   
     // requestAnimationFrame(function() { drawScene(gl)});
     requestAnimationFrame(drawScene);
@@ -138,12 +140,6 @@ function main() {
 
 
 
-function radToDeg(r) {
-  return r * 180 / Math.PI;
-}
 
-function degToRad(d) {
-  return d * Math.PI / 180;
-}
 
 main();
