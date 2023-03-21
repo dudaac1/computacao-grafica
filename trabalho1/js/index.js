@@ -20,9 +20,16 @@ const fShader = `#version 300 es
     out vec4 outColor;
 
     void main() {
-        outColor = v_color;
+      outColor = v_color;
     }
-`;
+    `;
+    
+const NUM_BG_OBJS = 3;
+const NUMBER_OBJS = 9;
+const MAX_VALUE = 100;
+
+var cartCounter, cartCounterDiv; // html: js
+var bgShapes, cardShapes; // html: webgl
 
 var program = null;
 var vao = null;
@@ -106,9 +113,6 @@ function main(NUMBER_OBJS, NUM_BG_OBJ, bgShapes, shapes) {
   }
 }
 
-const NUM_BG_OBJS = 3;
-const NUMBER_OBJS = 9;
-const MAX_VALUE = 100;
 
 // canvas do fundo
 function generateBackground() {
@@ -164,20 +168,28 @@ function generateShapes(number,  mult1, mult2) {
   return shapes;
 }
 
+
+
 function buyButton(numCanvas) {
   console.log(`item ${numCanvas} comprado: R$ ${cardShapes[numCanvas].price}`);
-  
+  cartCounter++;
+  cartCounterDiv.textContent = cartCounter;
+  // salvar dados do objeto em array
 }
 
+function start() {
+  cartCounter = 0;
+  cartCounterDiv = document.getElementById("cart-counter");
 
-// calling functions
+  generateBackground();
+  bgShapes = generateShapes(NUM_BG_OBJS, 500, 5);
+  cardShapes = generateShapes(NUMBER_OBJS, 100, 1);
+  generateCards();
+  
+  main(NUMBER_OBJS, NUM_BG_OBJS, bgShapes, cardShapes);
+}
 
-generateBackground();
-var bgShapes = generateShapes(NUM_BG_OBJS, 500, 5);
-var cardShapes = generateShapes(NUMBER_OBJS, 100, 1);
-generateCards();
-
-main(NUMBER_OBJS, NUM_BG_OBJS, bgShapes, cardShapes);
+start();
 
 
 

@@ -88,6 +88,8 @@ h1 {
   font-family: 'Roboto Bold', sans-serif;
 }
 
+header a { text-decoration: none; }
+
 a { 
   color: var(--primary-color);
   text-decoration: underline dotted var(--primary-color) 1px; 
@@ -100,10 +102,24 @@ a:hover {
 
 /*****************************************************************/
 /*                             OTHERS                            */
-
-.icon {
-  height: 2px;
+.cart { 
+  text-align: center; 
+  min-height: 3rem;
 }
+
+.cart a { text-decoration: none; }
+
+.cart-counter {
+  width: 3rem;
+  max-height: 2rem;
+  color: white;
+  border-radius: 100%;
+  margin: -2.9rem -0.05rem 1rem auto;
+  text-align: center;
+}
+
+.cart-counter a { 
+  text-decoration: none;}
 
 .bg-canvas {
   width: 100%;
