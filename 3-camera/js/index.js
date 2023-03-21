@@ -117,7 +117,8 @@ function drawScene() {
   cameraMatrix = m4.zRotate(cameraMatrix, cameraRadiansZ);
   cameraMatrix = m4.translate(cameraMatrix, 0, 50, radius * 1.5);
   
-  /*// Compute the position of the first F
+  /*
+  // Compute the position of the first F
   var fPosition = [radius, 0, 0];
 
   // Get the camera's postion from the matrix we computed
@@ -129,7 +130,8 @@ function drawScene() {
 
   var up = [0, 1, 0];
 
-  var cameraMatrix = m4.lookAt(cameraPosition, fPosition, up);*/
+  var cameraMatrix = m4.lookAt(cameraPosition, fPosition, up);
+  */
   var viewMatrix = m4.inverse(cameraMatrix);
   var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
@@ -166,6 +168,7 @@ function setBtnEvent() {
 
 function fAnimate(event) {
   event.srcElement.disabled = true;
+  event.srcElement.textContent = "Eu avisei!";
   var timeInput = document.getElementById("time");
   var time = timeInput.value * 1000;
   timeInput.value = 0;
@@ -178,17 +181,17 @@ function fAnimate(event) {
   function animation() {
       now = new Date().getTime();
       deltaTime = (now - then) * 0.001;
-      // ;
       then = now;
-      cameraRadiansX += 1.5 * deltaTime;
-      cameraRadiansY += 1.2 * deltaTime;
-      cameraRadiansZ += 0.8 * deltaTime;
+      cameraRadiansX += 7 * deltaTime;
+      cameraRadiansY += 9 * deltaTime;
+      cameraRadiansZ += 5 * deltaTime;
       drawScene();
       timeInput.value = Math.round(sum += deltaTime); // this is bad
       if (now < start + time) 
         requestAnimationFrame(animation);
         else {
           var btn = document.getElementById("btn");
+          btn.textContent = "NÃO CLIQUE";
           btn.disabled = false;
         }
       // how to update ui while animation is on
