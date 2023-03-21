@@ -1,0 +1,69 @@
+
+@import url("https://webgl2fundamentals.org/webgl/resources/webgl-tutorials.css");
+
+body {
+  margin: 0;
+}
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: -10;
+}
+
+.interact {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.interact * { margin: 0.2rem 0; }
+
+.interact > :nth-child(3) { margin-top: 5rem; }
+
+.my-ui {
+  font-family: 'Courier New', Courier, monospace;
+  margin: 1rem;
+  margin-right: 2rem;
+  text-transform: uppercase;
+  text-align: center;
+  color:cornflowerblue;
+}
+
+.my-ui input[type=number] {
+  border: 1px dashed cornflowerblue;
+  padding: 0.1rem 0.5rem;
+}
+
+.my-ui input[type=number]:active,
+.my-ui input[type=number]:focus {
+  outline: 2px solid cornflowerblue;
+  border: none;
+}
+
+.my-ui button {
+  background-color: whitesmoke;
+  border: 1px dashed cornflowerblue;
+  padding: 0.2rem 0.5rem;
+  font-weight: bold;  
+  color: cornflowerblue;
+  cursor: pointer;
+}
+
+.my-ui button:hover { border: 1px solid cornflowerblue; }
+
+.my-ui button:active {
+  background-color: cornflowerblue;
+  color: whitesmoke;
+  transition-duration: 0.1s;
+}
+
+.my-ui button:disabled {
+  background-color: lightgrey;
+  color: grey;
+  border: 1px solid grey;
+  cursor: wait;
+}
+
+
