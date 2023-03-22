@@ -26,6 +26,8 @@ const fShader = `#version 300 es
     }
 `;
 
+var cartCounter;
+
 var program = null;
 var vao = null;
 var positionAttribLocation = null;
@@ -96,19 +98,14 @@ function main() {
   function drawScene(now) {
     now *= 0.001;
     deltaTime = now - then;
-    // console.log(deltaTime)
     then = now;;
-
 
     // var currentTime = new Date().getTime();
     // var deltaTime = (currentTime - previousTime) * 0.001;
     // previousTime = currentTime;
 
-    // shape.rotation[0] += 1.2 * deltaTime;
-    // shape.rotation[1] += 1.8 * deltaTime;
     shape.rotation[0] += Math.sin(0.2 * deltaTime);
     shape.rotation[1] += 1.5 * deltaTime;
-    // shape.rotation[2] += 1.4 * deltaTime;
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -132,14 +129,40 @@ function main() {
   
     gl.drawArrays(gl.TRIANGLES, 0, 12*3);
   
-    // requestAnimationFrame(function() { drawScene(gl)});
     requestAnimationFrame(drawScene);
   }
-  
+}
+
+function start() {
+  cartCounter = localStorage.getItem("cartCounter");
+  if (cartCounter == null || cartCounter == 0)
+    cartCounter = 1
+  setCartItensValue();
+
+  var clearCartBtn = document.getElementById("clear-cart");
+  clearCartBtn.addEventListener("click", function() {
+    // MUDAR
+    // MUDAR
+    // MUDAR
+    cartCounter = 1; 
+    // MUDAR
+    // MUDAR
+    // MUDAR
+    localStorage.setItem("cartCounter", cartCounter);
+    setCartItensValue();
+  });
+
+  main();
+
+  function setCartItensValue() {
+    var cartCounterDiv = document.getElementById("cart-counter");
+    cartCounterDiv.textContent = cartCounter;
+    var cartCounterSpan = document.getElementById("cart-counter-span");
+    cartCounterSpan.textContent = cartCounter;
+  }
 }
 
 
+start();
 
 
-
-main();

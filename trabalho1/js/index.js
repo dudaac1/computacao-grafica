@@ -178,8 +178,17 @@ function buyButton(numCanvas) {
 }
 
 function start() {
-  cartCounter = 0;
+  cartCounter = localStorage.getItem("cartCounter");
+  if (cartCounter == null) cartCounter = 0;
   cartCounterDiv = document.getElementById("cart-counter");
+  cartCounterDiv.textContent = cartCounter;
+
+  var cartBtn = document.getElementById("cart-button");
+
+  cartBtn.addEventListener("click", function() {
+    localStorage.setItem("cartCounter", cartCounter);
+    location.href = "./cart.html";
+  })
 
   generateBackground();
   bgShapes = generateShapes(NUM_BG_OBJS, 500, 5);
