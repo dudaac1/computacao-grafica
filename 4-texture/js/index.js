@@ -42,7 +42,7 @@ function main() {
 
   vao = gl.createVertexArray();
   gl.bindVertexArray(vao);
-  
+
   var positionBuffer = gl.createBuffer();
   gl.enableVertexAttribArray(positionAttributeLocation);
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -85,30 +85,33 @@ function main() {
   // Asynchronously load an image
   var image = new Image();
   image.src = "./resources/texture-rocky.png";
-  image.addEventListener('load', function() {
+  image.addEventListener('load', function () {
     // Now that the image has loaded make copy it to the texture.
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
     drawScene();
   });
-  
+
 
   // Setup a ui.
-  webglLessonsUI.setupSlider("#cameraAngleX", {value: radToDeg(cameraRadiansX), slide: updateAngleX, min: -360, max: 360});
-  webglLessonsUI.setupSlider("#cameraAngleY", {value: radToDeg(cameraRadiansY), slide: updateAngleY, min: -360, max: 360});
-  webglLessonsUI.setupSlider("#cameraAngleZ", {value: radToDeg(cameraRadiansZ), slide: updateAngleZ, min: -360, max: 360});
+  webglLessonsUI.setupSlider("#cameraAngleX", { value: radToDeg(cameraRadiansX), slide: updateAngleX, min: -360, max: 360 });
+  webglLessonsUI.setupSlider("#cameraAngleY", { value: radToDeg(cameraRadiansY), slide: updateAngleY, min: -360, max: 360 });
+  webglLessonsUI.setupSlider("#cameraAngleZ", { value: radToDeg(cameraRadiansZ), slide: updateAngleZ, min: -360, max: 360 });
 
-  document.querySelector("#rockyTex").addEventListener('click', function() { 
+  document.querySelector("#rockyTex").addEventListener('click', function () {
     image.src = "./resources/texture-rocky.png";
-    drawScene(); });  // eslint-disable-line
-  document.querySelector("#jjuliarTex").addEventListener('click', function() {
+    drawScene();
+  });  // eslint-disable-line
+  document.querySelector("#jjuliarTex").addEventListener('click', function () {
     image.src = "./resources/texture-jjuliar.png";
-    drawScene(); });  // eslint-disable-line
-  document.querySelector("#skyTex").addEventListener('click', function() {
+    drawScene();
+  });  // eslint-disable-line
+  document.querySelector("#skyTex").addEventListener('click', function () {
     image.src = "./resources/texture-sky.png";
-    drawScene(); });  // eslint-disable-line
-    
+    drawScene();
+  });  // eslint-disable-line
+
   drawScene();
 
   function updateAngleX(event, ui) {
@@ -145,13 +148,13 @@ function drawScene() {
   var zNear = 1;
   var zFar = 1000;
   var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
-  
+
   // Use matrix math to compute a position on the circle.
   var cameraMatrix = m4.xRotation(cameraRadiansX);
   cameraMatrix = m4.yRotate(cameraMatrix, cameraRadiansY);
   cameraMatrix = m4.zRotate(cameraMatrix, cameraRadiansZ);
   cameraMatrix = m4.translate(cameraMatrix, 0, 50, radius * 1.5);
-  
+
   // Compute the position of the first F
   var fPosition = [radius, 0, 0];
 
@@ -210,24 +213,24 @@ function fAnimate(event) {
   var then = start;
   var now, deltaTime, sum = 0;
   requestAnimationFrame(animation);
-  
+
   function animation() {
-      now = new Date().getTime();
-      deltaTime = (now - then) * 0.001;
-      then = now;
-      cameraRadiansX += 1 * deltaTime;
-      cameraRadiansY += 3 * deltaTime;
-      // cameraRadiansZ += 2 * deltaTime;
-      drawScene();
-      timeInput.value = Math.round(sum += deltaTime); // this is bad
-      if (now < start + time) 
-        requestAnimationFrame(animation);
-      else {
-        var btn = document.getElementById("btn");
-        btn.textContent = "NÃO CLIQUE";
-        btn.disabled = false;
-      }
-      // how to update ui while animation is on
+    now = new Date().getTime();
+    deltaTime = (now - then) * 0.001;
+    then = now;
+    cameraRadiansX += 1 * deltaTime;
+    cameraRadiansY += 3 * deltaTime;
+    // cameraRadiansZ += 2 * deltaTime;
+    drawScene();
+    timeInput.value = Math.round(sum += deltaTime); // this is bad
+    if (now < start + time)
+      requestAnimationFrame(animation);
+    else {
+      var btn = document.getElementById("btn");
+      btn.textContent = "NÃO CLIQUE";
+      btn.disabled = false;
+    }
+    // how to update ui while animation is on
   }
 }
 

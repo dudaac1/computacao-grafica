@@ -62,7 +62,6 @@ function setCubeGeometry(gl) {
     gl.STATIC_DRAW);
 }
 
-
 // Fill the current ARRAY_BUFFER buffer with colors for the 'F'.
 function setCubeColors(gl) {
   var r1 = Math.random() * 255;
@@ -130,4 +129,66 @@ function setCubeColors(gl) {
       r1, g2, b2
     ]),
     gl.STATIC_DRAW);
+}
+
+function setCubeTexCoords(gl) {
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array([
+      0   , 0.5, 
+      0   , 0  ,
+      0.25, 0  ,
+      0   , 0.5,
+      0.25, 0  ,
+      0.25, 0.5,
+    
+      0.5 , 0  , 
+      0.25, 0  ,
+      0.25, 0.5,
+      0.5 , 0  ,
+      0.25, 0.5,
+      0.5 , 0.5,
+      
+      0.5 , 0.5, 
+      0.75, 0.5,
+      0.75, 0  ,
+      0.75, 0  ,
+      0.5 , 0  ,
+      0.5 , 0.5,
+      
+      0.25, 0.5, 
+      0   , 0.5,
+      0   , 1  ,
+      0   , 1  ,
+      0.25, 1  ,
+      0.25, 0.5,
+      
+      0.5 , 0.5,
+      0.5 , 1  ,
+      0.25, 1  ,
+      0.25, 1  ,
+      0.25, 0.5,
+      0.5 , 0.5,
+
+      0.5 , 1  ,
+      0.75, 0.5,
+      0.75, 1  ,
+      0.5 , 0.5,
+      0.75, 0.5,
+      0.5 , 1  
+    ]),
+    gl.STATIC_DRAW);
+}
+
+function getCubeTexturesList() {
+  return [
+    "./resources/textures/cube/jjuliar.png",
+    "./resources/textures/cube/rocky.png",
+    "./resources/textures/cube/puppies.png",
+    "./resources/textures/cube/fabrics.png",
+    "./resources/textures/cube/flower.png",
+    "./resources/textures/cube/paintings.png",
+    "./resources/textures/cube/rocky.png",
+    "./resources/textures/cube/jjuliar.png",
+  ]
 }

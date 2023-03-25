@@ -1,6 +1,6 @@
 "use strict";
 
-const NUMBER_OBJS = 12;
+const NUMBER_OBJS = 8;
 let cartCounter, cartCounterDiv, indexShapes;
 
 function generateIndexCards() {
@@ -81,15 +81,19 @@ function index_start() {
   index_main(NUMBER_OBJS, indexShapes);
 
   function generateIndexShapes(number, mult1, mult2) {
+    var cubeTextures = getCubeTexturesList();
     var shapes = [];
+    var texAux = 0;
     for (let i = 0; i < number; ++i) {
+      if (texAux == cubeTextures.element) texAux = 0;
       shapes.push({
         // translation: [Math.random() * mult1, Math.random() * mult1, 0],
-        translation: [0, 0, 0],
-        rotation: [0, 0, 0],
+        // translation: [0, 0, 0],
+        // rotation: [50, 100, 50],
         // rotation: [degToRad(Math.random() * 75), degToRad(Math.random() * 75), degToRad(Math.random() * 75)],
-        scale: [0.2 * mult2, 0.2 * mult2, 0.2 * mult2],
+        // scale: [0.2 * mult2, 0.2 * mult2, 0.2 * mult2],
         // color: [Math.random(), Math.random(), Math.random(), 1],
+        texture: texAux++,
         price: Math.round(Math.random() * 50)
       });
     }
