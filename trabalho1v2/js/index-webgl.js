@@ -26,7 +26,7 @@ const fragmentShaderIndex = `#version 300 es
 
 var iGl, iProgram, iVao, iColorAttribLoc, iPosAttribLoc, iMatrixLoc;
 
-var iCamera = [3, 3.5, 4];
+var iCamera = [3, 3.5, 4, 300];
 
 function setIndexWebGl(gl) {
   iPosAttribLoc = gl.getAttribLocation(iProgram, "a_position");
@@ -85,7 +85,7 @@ function drawIndexShape(gl, shapes, index) {
   var camMatrix = m4.xRotation(iCamera[0]);
   camMatrix = m4.yRotate(camMatrix, iCamera[1]);
   camMatrix = m4.zRotate(camMatrix, iCamera[2]);
-  camMatrix = m4.translate(camMatrix, 10, 300, radius * 1.5);
+  camMatrix = m4.translate(camMatrix, 2, iCamera[3], 0.5);
 
   // console.log(camMatrix)
 
@@ -107,6 +107,7 @@ function setupUI(shapes, index) {
   webglLessonsUI.setupSlider(`#x${index}`, {value: radToDeg(iCamera[0]), slide: updateAngleX(index), min: -360, max: 360});
   webglLessonsUI.setupSlider(`#y${index}`, {value: radToDeg(iCamera[1]), slide: updateAngleY(index), min: -360, max: 360});
   webglLessonsUI.setupSlider(`#z${index}`, {value: radToDeg(iCamera[2]), slide: updateAngleZ(index), min: -360, max: 360});
+  webglLessonsUI.setupSlider(`#zoom${index}`, {value: iCamera[3], slide: updateZoom(index), min: 0, max: 500});
 
   // drawScene();
 
@@ -127,6 +128,13 @@ function setupUI(shapes, index) {
   function updateAngleZ(i) {
     return function (event, ui) {
       iCamera[2] = degToRad(ui.value);
+      mainCalls(i, shapes);
+    }
+  }
+
+  function updateZoom(i) {
+    return function (event, ui) {
+      iCamera[3] = ui.value;
       mainCalls(i, shapes);
     }
   }

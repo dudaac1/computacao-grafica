@@ -5,7 +5,7 @@ let cartCounter, cartCounterDiv, indexShapes;
 
 function generateIndexCards() {
   var main = document.getElementById("main-container");
-  var card, canvas, btn, text, info, uiC, ui, camX, camY, camZ;
+  var card, canvas, btn, text, info, uiC, ui, camX, camY, camZ, zoom;
   for (let i = 0; i < NUMBER_OBJS; ++i) {
     card = generateElement("div", `card${i}`);
     card.classList = "card";
@@ -15,14 +15,13 @@ function generateIndexCards() {
     uiC = generateElement("div", "uiContainer");
     ui = generateElement("div", "ui");
     camX = generateElement("div", `x${i}`);
-    // camX.textContent = i;
     ui.appendChild(camX);
     camY = generateElement("div", `y${i}`);
-    // camY.textContent = i;
     ui.appendChild(camY);
     camZ = generateElement("div", `z${i}`);
-    // camZ.textContent = i;
     ui.appendChild(camZ);
+    zoom = generateElement("div", `zoom${i}`);
+    ui.appendChild(zoom);
     uiC.appendChild(ui);
     card.appendChild(uiC);
 
@@ -78,6 +77,7 @@ function index_start() {
   // creating objects from index page and calling main()
   indexShapes = generateIndexShapes(NUMBER_OBJS, 100, 1);
   generateIndexCards();
+  
   index_main(NUMBER_OBJS, indexShapes);
 
   function generateIndexShapes(number, mult1, mult2) {

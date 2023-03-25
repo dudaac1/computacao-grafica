@@ -151,6 +151,7 @@ a:hover {
 }
 
 .info {
+  margin-top: 1em;
   text-align: center;
   padding: 0.5rem;
 }
@@ -165,14 +166,22 @@ a:hover {
   cursor: pointer;
 }
 
+.cart-box { 
+  height: 100vh;
+  width: 90vw;
+  margin-bottom: 50rem;
+}
+
 .cart-box h2 {
   margin-bottom: 0.5rem;
+  max-height: 10vh;
 }
 
 .cart-box canvas {
   border: 1px solid black;
   width: 100%;
   border-radius: 1rem;
+  height: 75%;
 }
 
 .clear-cart-btn {
@@ -206,7 +215,7 @@ a:hover {
 
 .gman-slider-label, .gman-widget-label, .gman-checkbox-label {
   font-size: small;
-  min-width: 2.5em;
+  min-width: 3.5em;
   text-align: center;
 }
 
