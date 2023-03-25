@@ -55,7 +55,7 @@ function bg_main(gl, shape) {
     // gl.enable(gl.CULL_TEST);
     gl.useProgram(bProgram);
     gl.bindVertexArray(bVao);
-    
+
     var bMatrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 500);
     bMatrix = m4.translate(bMatrix, shape.translation[0], shape.translation[1], shape.translation[2]);
     bMatrix = m4.xRotate(bMatrix, shape.rotation[0]);
@@ -64,7 +64,7 @@ function bg_main(gl, shape) {
     bMatrix = m4.scale(bMatrix, shape.scale[0], shape.scale[1], shape.scale[2]);
     gl.uniformMatrix4fv(bMatrixLoc, false, bMatrix);
 
-    gl.drawArrays(gl.TRIANGLES, 0, 12 * 3); 
+    gl.drawArrays(gl.TRIANGLES, 0, 12 * 3);
   }
 }
 

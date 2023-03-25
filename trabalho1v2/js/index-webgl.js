@@ -37,9 +37,9 @@ function setIndexWebGl(gl) {
   iVao = gl.createVertexArray();
   gl.bindVertexArray(iVao);
   gl.enableVertexAttribArray(iPosAttribLoc);
-  gl.bindBuffer(gl.ARRAY_BUFFER, iPositionBuffer); 
+  gl.bindBuffer(gl.ARRAY_BUFFER, iPositionBuffer);
   setCubeGeometry(gl);
-  
+
   var size = 3;          // 2 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
   var normalize = false; // don't normalize the data
@@ -57,7 +57,7 @@ function setIndexWebGl(gl) {
 function drawIndexShape(gl, shapes, index) {
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.clearColor(0, 0, 0, 0); 
+  gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.enable(gl.DEPTH_TEST);
   //gl.enable(gl.CULL_TEST);
@@ -99,15 +99,15 @@ function drawIndexShape(gl, shapes, index) {
   var matrix = m4.translate(viewProjectionMatrix, 0, 0, 0);
   gl.uniformMatrix4fv(iMatrixLoc, false, matrix);
 
-  gl.drawArrays(gl.TRIANGLES, 0, 12 * 3); 
+  gl.drawArrays(gl.TRIANGLES, 0, 12 * 3);
 }
 
 // function setupUI(gl, shapes, index) {
 function setupUI(shapes, index) {
-  webglLessonsUI.setupSlider(`#x${index}`, {value: radToDeg(iCamera[0]), slide: updateAngleX(index), min: -360, max: 360});
-  webglLessonsUI.setupSlider(`#y${index}`, {value: radToDeg(iCamera[1]), slide: updateAngleY(index), min: -360, max: 360});
-  webglLessonsUI.setupSlider(`#z${index}`, {value: radToDeg(iCamera[2]), slide: updateAngleZ(index), min: -360, max: 360});
-  webglLessonsUI.setupSlider(`#zoom${index}`, {value: iCamera[3], slide: updateZoom(index), min: 0, max: 500});
+  webglLessonsUI.setupSlider(`#x${index}`, { value: radToDeg(iCamera[0]), slide: updateAngleX(index), min: -360, max: 360 });
+  webglLessonsUI.setupSlider(`#y${index}`, { value: radToDeg(iCamera[1]), slide: updateAngleY(index), min: -360, max: 360 });
+  webglLessonsUI.setupSlider(`#z${index}`, { value: radToDeg(iCamera[2]), slide: updateAngleZ(index), min: -360, max: 360 });
+  webglLessonsUI.setupSlider(`#zoom${index}`, { value: iCamera[3], slide: updateZoom(index), min: 0, max: 500 });
 
   // drawScene();
 

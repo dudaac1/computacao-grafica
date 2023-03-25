@@ -3,15 +3,15 @@ var cartCounter;
 function cart_start() {
   cartCounter = localStorage.getItem("cartCounter", cartCounter);
   if (!cartCounter)
-  cartCounter = 0
+    cartCounter = 0
   setCartItensValue();
-  
+
   var canvasWidth = document.getElementById("cart-canvas").getBoundingClientRect().width;
   var cartShapes = generateCartShapes(2, canvasWidth);
 
   var clearCartBtn = document.getElementById("clear-cart");
-  clearCartBtn.addEventListener("click", function() {
-    cartCounter = 0; 
+  clearCartBtn.addEventListener("click", function () {
+    cartCounter = 0;
     localStorage.setItem("cartCounter", cartCounter);
     cartShapes = [];
     setCartItensValue();
@@ -49,7 +49,7 @@ function generateCartShapes(mult2, canvasWidth) {
     });
   }
   return shapes;
-  }
+}
 
 
 

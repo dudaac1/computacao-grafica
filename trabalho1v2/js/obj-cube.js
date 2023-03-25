@@ -9,7 +9,7 @@ function setCubeGeometry(gl) {
       -100, -100, 0.0,
       -100, 100, 0.0,
       100, 100, 0.0,
-      
+
       -100, -100, 0.0,
       100, 100, 0.0,
       100, -100, 0.0,
@@ -19,18 +19,18 @@ function setCubeGeometry(gl) {
       -100, 100, 100,
       -100, 100, 0.0,
 
-      -100, -100, 100, 
+      -100, -100, 100,
       -100, 100, 0.0,
       -100, -100, 0.0,
 
-       // bottom face
-       -100, -100, 0.0,
-       100, -100, 0.0,
-       100, -100, 100,
- 
-       100, -100, 100, 
-       -100, -100, 100,
-       -100, -100, 0.0,
+      // bottom face
+      -100, -100, 0.0,
+      100, -100, 0.0,
+      100, -100, 100,
+
+      100, -100, 100,
+      -100, -100, 100,
+      -100, -100, 0.0,
 
       //back face
       100, 100, 100,
@@ -38,7 +38,7 @@ function setCubeGeometry(gl) {
       -100, -100, 100,
 
       -100, -100, 100,
-      -100, 100, 100, 
+      -100, 100, 100,
       100, 100, 100,
 
       // right face
@@ -56,14 +56,14 @@ function setCubeGeometry(gl) {
       -100, 100, 100,
 
       100, 100, 0.0,
-      100, 100, 100, 
+      100, 100, 100,
       -100, 100, 0.0
     ]),
     gl.STATIC_DRAW);
-  }
+}
 
 
-  // Fill the current ARRAY_BUFFER buffer with colors for the 'F'.
+// Fill the current ARRAY_BUFFER buffer with colors for the 'F'.
 function setCubeColors(gl) {
   var r1 = Math.random() * 255;
   var r2 = Math.random() * 255;
@@ -73,61 +73,61 @@ function setCubeColors(gl) {
   var b2 = Math.random() * 255;
 
   gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Uint8Array([
-        // front face 
-        r1, g1, b1,
-        r1, g1, b1,
-        r1, g1, b1,
-        
-        r1, g1, b1,
-        r1, g1, b1,
-        r1, g1, b1,
+    gl.ARRAY_BUFFER,
+    new Uint8Array([
+      // front face 
+      r1, g1, b1,
+      r1, g1, b1,
+      r1, g1, b1,
 
-        // right face 
-        r2, g2, b2,
-        r2, g2, b2,
-        r2, g2, b2,
+      r1, g1, b1,
+      r1, g1, b1,
+      r1, g1, b1,
 
-        r2, g2, b2,
-        r2, g2, b2,
-        r2, g2, b2,
+      // right face 
+      r2, g2, b2,
+      r2, g2, b2,
+      r2, g2, b2,
 
-        //back face 
-        r1, g2, b1,
-        r1, g2, b1,
-        r1, g2, b1,
+      r2, g2, b2,
+      r2, g2, b2,
+      r2, g2, b2,
 
-        r1, g2, b1,
-        r1, g2, b1,
-        r1, g2, b1,
+      //back face 
+      r1, g2, b1,
+      r1, g2, b1,
+      r1, g2, b1,
 
-        // up face 
-        r2, g1, b2, 
-        r2, g1, b2,  
-        r2, g1, b2,  
+      r1, g2, b1,
+      r1, g2, b1,
+      r1, g2, b1,
 
-        r2, g1, b2, 
-        r2, g1, b2, 
-        r2, g1, b2, 
+      // up face 
+      r2, g1, b2,
+      r2, g1, b2,
+      r2, g1, b2,
 
-        // left face 
-        r1, g1, b2, 
-        r1, g1, b2, 
-        r1, g1, b2,
+      r2, g1, b2,
+      r2, g1, b2,
+      r2, g1, b2,
 
-        r1, g1, b2, 
-        r1, g1, b2, 
-        r1, g1, b2, 
+      // left face 
+      r1, g1, b2,
+      r1, g1, b2,
+      r1, g1, b2,
 
-        // bottom face :: ORANGE
-        r1, g2, b2,
-        r1, g2, b2,
-        r1, g2, b2,
+      r1, g1, b2,
+      r1, g1, b2,
+      r1, g1, b2,
 
-        r1, g2, b2,
-        r1, g2, b2,
-        r1, g2, b2
-      ]),
-      gl.STATIC_DRAW);
+      // bottom face :: ORANGE
+      r1, g2, b2,
+      r1, g2, b2,
+      r1, g2, b2,
+
+      r1, g2, b2,
+      r1, g2, b2,
+      r1, g2, b2
+    ]),
+    gl.STATIC_DRAW);
 }

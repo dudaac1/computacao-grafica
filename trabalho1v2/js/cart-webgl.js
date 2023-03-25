@@ -44,21 +44,21 @@ function cart_main(cartShapes, cartCounter) {
     // cColorAttribLoc = cGl.getAttribLocation(cProgram, "a_color");
     cColorLoc = cGl.getUniformLocation(cProgram, "u_color");
     cMatrixLoc = cGl.getUniformLocation(cProgram, "u_matrix");
-  
+
     var cPositionBuffer = cGl.createBuffer();
     cVao = cGl.createVertexArray();
     cGl.bindVertexArray(cVao);
     cGl.enableVertexAttribArray(cPosAttribLoc);
-    cGl.bindBuffer(cGl.ARRAY_BUFFER, cPositionBuffer); 
+    cGl.bindBuffer(cGl.ARRAY_BUFFER, cPositionBuffer);
     setCubeGeometry(cGl);
-    
+
     var size = 3;          // 2 components per iteration
     var type = cGl.FLOAT;   // the data is 32bit floats
     var normalize = false; // don't normalize the data
     var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
     var offset = 0;        // start at the beginning of the buffer
     cGl.vertexAttribPointer(cPosAttribLoc, size, type, normalize, stride, offset);
-  
+
     /*
     var colorBuffer = cGl.createBuffer();
     cGl.bindBuffer(cGl.ARRAY_BUFFER, colorBuffer);
@@ -70,7 +70,7 @@ function cart_main(cartShapes, cartCounter) {
 
   var then = 0;
   var deltaTime;
-  
+
   function drawCartShape(now) {
     // console.log(cartCounter);
     now *= 0.001;
@@ -79,7 +79,7 @@ function cart_main(cartShapes, cartCounter) {
 
     webglUtils.resizeCanvasToDisplaySize(cGl.canvas);
     cGl.viewport(0, 0, cGl.canvas.width, cGl.canvas.height);
-    cGl.clearColor(0, 0, 0, 0); 
+    cGl.clearColor(0, 0, 0, 0);
     cGl.clear(cGl.COLOR_BUFFER_BIT | cGl.DEPTH_BUFFER_BIT);
     cGl.enable(cGl.DEPTH_TEST);
     //gl.enable(gl.CULL_TEST);
@@ -95,7 +95,7 @@ function cart_main(cartShapes, cartCounter) {
       // var zFar = 500;
       // var projMatrix = m4.perspective(FOVRadians, aspect, zNear, zFar);
 
-      cGl.uniform4fv(cColorLoc, cartShapes[index].color); 
+      cGl.uniform4fv(cColorLoc, cartShapes[index].color);
 
       var cMatrix = m4.projection(cGl.canvas.clientWidth, cGl.canvas.clientHeight, 500);
       cMatrix = m4.translate(cMatrix, cartShapes[index].translation[0], cartShapes[index].translation[1], cartShapes[index].translation[2]);
@@ -104,8 +104,8 @@ function cart_main(cartShapes, cartCounter) {
       cMatrix = m4.zRotate(cMatrix, cartShapes[index].rotation[2]);
       cMatrix = m4.scale(cMatrix, cartShapes[index].scale[0], cartShapes[index].scale[1], cartShapes[index].scale[2]);
       cGl.uniformMatrix4fv(cMatrixLoc, false, cMatrix);
-      
-    
+
+
       /* 
       var radius = 0;
     
@@ -126,9 +126,9 @@ function cart_main(cartShapes, cartCounter) {
       var matrix = m4.translate(viewProjectionMatrix, 0, 0, 0);
       cGl.uniformMatrix4fv(cMatrixLoc, false, matrix); 
       */
-      
-    
-     cGl.drawArrays(cGl.TRIANGLES, 0, 12 * 3); 
+
+
+      cGl.drawArrays(cGl.TRIANGLES, 0, 12 * 3);
     }
     requestAnimationFrame(drawCartShape);
   }

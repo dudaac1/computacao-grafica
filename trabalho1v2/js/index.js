@@ -30,14 +30,14 @@ function generateIndexCards() {
     text = document.createElement("h3");
     text.textContent = `R$ ${indexShapes[i].price}`;
     info.appendChild(text);
-    
+
     btn = document.createElement("button");
     btn.textContent = "comprar";
     btn.classList = "btn";
-    btn.addEventListener("click", function() { buyButton(i)});
+    btn.addEventListener("click", function () { buyButton(i) });
     info.appendChild(btn);
     card.appendChild(info);
-    
+
     main.appendChild(card);
   }
 
@@ -64,20 +64,20 @@ function index_start() {
 
   // set function for cart button
   var cartBtn = document.getElementById("cart-button");
-  cartBtn.addEventListener("click", function() {
+  cartBtn.addEventListener("click", function () {
     localStorage.setItem("cartCounter", cartCounter);
     location.href = "./cart.html";
   })
 
   // set update cartCounter in local storage before reload
-  window.addEventListener("beforeunload", function() {
+  window.addEventListener("beforeunload", function () {
     localStorage.setItem("cartCounter", cartCounter)
   });
 
   // creating objects from index page and calling main()
   indexShapes = generateIndexShapes(NUMBER_OBJS, 100, 1);
   generateIndexCards();
-  
+
   index_main(NUMBER_OBJS, indexShapes);
 
   function generateIndexShapes(number, mult1, mult2) {
