@@ -88,7 +88,9 @@ h1 {
   font-family: 'Roboto Bold', sans-serif;
 }
 
-header a { text-decoration: none; }
+header a { 
+  text-decoration: none; 
+}
 
 a { 
   color: var(--primary-color);
@@ -138,6 +140,7 @@ a:hover {
   margin: 0.2rem;
   padding: 0.2rem;
   border-radius: 1rem;
+  margin: 1rem;
 }
 
 .card .canvas {
@@ -176,6 +179,75 @@ a:hover {
   padding: 0.2rem 0.5rem;
 }
 
+/*****************************************************************/
+/*                        WEBGL LESSONS UI                       */
+
+#uiContainer {
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  font-family: monospace;
+  pointer-events: none;
+
+  text-shadow:
+   -1px -1px 0 #FFF,
+    1px -1px 0 #FFF,
+    -1px 1px 0 #FFF,
+     1px 1px 0 #FFF;
+}
+
+#ui > div {
+  pointer-events: none;
+}
+
+#ui input, #ui select, #ui option, #ui canvas {
+  pointer-events: auto;
+}
+
+.gman-slider-label, .gman-widget-label, .gman-checkbox-label {
+  font-size: small;
+  min-width: 2.5em;
+  text-align: center;
+}
+
+.gman-checkbox-label {
+  pointer-events: auto;
+}
+
+.gman-widget-value {
+  float: right;
+  font-size: small;
+  order: 1;
+  min-width: 3em;
+}
+
+.gman-slider-upper { 
+  height: 1.5em;
+}
+
+.gman-slider-outer, .gman-widget-outer {
+  float: left;
+  display: flex;
+  align-items: center;
+  height: 1.7em;
+}
+
+.gman-widget-slider, .gman-widget-checkbox, .gman-widget-select {
+  opacity: 0.5;
+  font-size: large;
+  margin-left: .3em;
+  margin-right: .3em;
+}
+
+.gman-widget-select {
+  font-size: small;
+}
+
+.gman-widget-slider {
+  min-width: 120px;
+  /* color: #000; */
+  
+}
 
 /*****************************************************************/
 /*                           RESPONSIVE                          */

@@ -2,55 +2,64 @@
 
 const vShader2 = `#version 300 es
   uniform mat4 u_matrix;
-  uniform float u_PointSize;
+  // uniform float u_PointSize;
 
   in vec4 a_position;
-  in vec4 a_color;
-  out vec4 v_color;
+  // in vec4 a_color;
+  // out vec4 v_color;
 
   void main() {
     gl_Position = u_matrix * a_position;
-    gl_PointSize = u_PointSize;
-    v_color = a_color;
+    // gl_PointSize = u_PointSize;
+    // v_color = a_color;
+    // u_color = v_color;
   }
 `;
 
 const fShader = `#version 300 es
     precision highp float;
 
-    in vec4 v_color;
+    // in vec4 v_color;
+    uniform vec4 u_color;
     out vec4 outColor;
 
     void main() {
-      outColor = v_color;
+      // outColor = v_color;
+      outColor = u_color;
     }
 `;
 
-var cartCounter;
+var shapes, cartCounter;
 
+var gl;
 var program = null;
 var vao = null;
 var positionAttribLocation = null;
 var matrixLocation = null;
-var colorAttribLocation = null;
+// var colorAttribLocation = null;
+var colorLocation = null;
 var u_PointSize = null;
 // var resolutionUniformLocation = null;
 
-var shape = {
-  translation: [200, 200, 0],
-  rotation: [degToRad(180), degToRad(120), degToRad(150)],
-  scale: [0.5, 0.5, 1],
-  color: [Math.random(), Math.random(), Math.random(), 1]
-}
+// var shape = {
+//   translation: [200, 200, 0],
+//   rotation: [degToRad(180), degToRad(120), degToRad(150)],
+//   scale: [0.5, 0.5, 1],
+//   color: [Math.random(), Math.random(), Math.random(), 1]
+// }
+
+
 
 function main() {
-  var gl = getGLContext("card-canvas");
+  
+  gl = getGLContext("card-canvas");
   program = createProgram(gl, vShader2, fShader);
 
   // const pointSize = 10.0; // set point size to 10 pixels
-  u_PointSize = gl.getUniformLocation(program, "u_PointSize");
+  // u_PointSize = gl.getUniformLocation(program, "u_PointSize");
   positionAttribLocation = gl.getAttribLocation(program, "a_position");
-  colorAttribLocation =  gl.getAttribLocation(program, "a_color");
+  // colorAttribLocation =  gl.getAttribLocation(program, "a_color");
+  colorLocation =  gl.getUniformLocation(program, "u_color");
   matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
   var positionBuffer = gl.createBuffer();
@@ -69,6 +78,7 @@ function main() {
   var offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(positionAttribLocation, size, type, normalize, stride, offset);
 
+  /*
   var colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   setColors(gl);
@@ -80,76 +90,96 @@ function main() {
   stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next color
   offset = 0;        // start at the beginning of the buffer
   gl.vertexAttribPointer(colorAttribLocation, size, type, normalize, stride, offset);
-  // draw scene
-
-  // drawScene(gl);
+  */
 
   // var startTime = new Date().getTime();
   // var currentTime;
-  var deltaTime;
   // var previousTime = new Date().getTime();
-  var then = 0;
+  
+  // var then = 0;
+  // var deltaTime;
 
   // requestAnimationFrame(function() { drawScene(gl)});
-  requestAnimationFrame(drawScene);
+  // requestAnimationFrame(drawScene);
+  // for (let i = 0; i < cartCounter; ++i)
+    requestAnimationFrame(drawScene);
 
+    // drawScene();
+}
 
+var then = 0;
+var deltaTime;
 
-  function drawScene(now) {
-    now *= 0.001;
-    deltaTime = now - then;
-    then = now;;
+function drawScene(now) {
+  // console.log(index)
+  now *= 0.001;
+  deltaTime = now - then;
+  then = now;
 
-    // var currentTime = new Date().getTime();
-    // var deltaTime = (currentTime - previousTime) * 0.001;
-    // previousTime = currentTime;
-
-    shape.rotation[0] += Math.sin(0.2 * deltaTime);
-    shape.rotation[1] += 1.5 * deltaTime;
-
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  // currentTime = new Date().getTime();
+  // deltaTime = (currentTime - previousTime) * 0.001;
+  // previousTime = currentTime;
+  
+  
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  
+  
+  for (let i = 0; i < cartCounter; ++i) {
+    shapes[i].rotation[0] += Math.sin(0.2 * deltaTime);
+    shapes[i].rotation[1] += 1.5 * deltaTime;
+    
     gl.enable(gl.DEPTH_TEST);
     // gl.enable(gl.CULL_FACE);
     gl.useProgram(program);
     gl.bindVertexArray(vao);
-    // gl.uniform4fv(colorLocation, shape.color); 
-    gl.uniform1f(u_PointSize, 10);
-  
+
+    gl.uniform4fv(colorLocation, shapes[i].color); 
+    // gl.uniform1f(u_PointSize, 10);
+    
     var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 1000);
-    matrix = m4.translate(matrix, shape.translation[0], shape.translation[1], shape.translation[2]);
-    matrix = m4.xRotate(matrix, shape.rotation[0]);
-    matrix = m4.yRotate(matrix, shape.rotation[1]);
-    matrix = m4.zRotate(matrix, shape.rotation[2]);
-    matrix = m4.scale(matrix, shape.scale[0], shape.scale[1], shape.scale[2]);
+    matrix = m4.translate(matrix, shapes[i].translation[0], shapes[i].translation[1], shapes[i].translation[2]);
+    matrix = m4.xRotate(matrix, shapes[i].rotation[0]);
+    matrix = m4.yRotate(matrix, shapes[i].rotation[1]);
+    matrix = m4.zRotate(matrix, shapes[i].rotation[2]);
+    matrix = m4.scale(matrix, shapes[i].scale[0], shapes[i].scale[1], shapes[i].scale[2]);
   
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
   
     gl.drawArrays(gl.TRIANGLES, 0, 12*3);
-  
-    requestAnimationFrame(drawScene);
   }
+  requestAnimationFrame(drawScene);
+
+
 }
 
 function start() {
   cartCounter = localStorage.getItem("cartCounter");
+  console.log(cartCounter)
   if (cartCounter == null || cartCounter == 0)
-    cartCounter = 1
+    cartCounter = 0
   setCartItensValue();
+  shapes = generateShapes(cartCounter);
 
   var clearCartBtn = document.getElementById("clear-cart");
   clearCartBtn.addEventListener("click", function() {
-    // MUDAR
-    // MUDAR
-    // MUDAR
-    cartCounter = 1; 
-    // MUDAR
-    // MUDAR
-    // MUDAR
+    cartCounter = 0; 
     localStorage.setItem("cartCounter", cartCounter);
     setCartItensValue();
+
+    console.log(cartCounter)
+    // if (!cartCounter)
+    //   for (let i = 0; i < cartCounter; ++i)
+    //     drawScene(i);
+    // else {
+    //   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    //   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    //   gl.clearColor(0, 0, 0, 0);
+    //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // }
+
   });
 
   main();
@@ -160,8 +190,22 @@ function start() {
     var cartCounterSpan = document.getElementById("cart-counter-span");
     cartCounterSpan.textContent = cartCounter;
   }
+
 }
 
+function generateShapes(number) {
+  var shapes = [];
+  for (let i = 0; i < number; ++i) {
+    shapes.push({
+      translation: [50 + (i*100), Math.random() * 200, 0],
+      rotation: [degToRad(Math.random() * 100), degToRad(Math.random() * 100), degToRad(Math.random() * 100)],
+      scale: [0.2, 0.2, 0.2],
+      color: [Math.random(), Math.random(), Math.random(), 1],
+      price: Math.round(Math.random() * 50)
+    });
+  }
+  return shapes;
+}
 
 start();
 

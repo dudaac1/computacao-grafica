@@ -24,8 +24,7 @@ const fShader = `#version 300 es
     }
     `;
     
-const NUM_BG_OBJS = 3;
-const NUMBER_OBJS = 9;
+const NUMBER_OBJS = 8;
 const MAX_VALUE = 100;
 
 var cartCounter, cartCounterDiv; // html: js
@@ -37,14 +36,15 @@ var colorAttribLocation = null;
 var positionAttribLocation = null;
 var matrixLocation = null;
 
-function main(NUMBER_OBJS, NUM_BG_OBJ, bgShapes, shapes) {
-  var bgGl = getGLContext("canvas-main-bg");
-  program = createProgram(bgGl, vShader, fShader);
-  setWebGl(bgGl, program);
-  for (let j = 0; j < NUM_BG_OBJ; ++j) 
-    drawShape(bgGl, bgShapes, j);
+function main(NUMBER_OBJS, shapes) {
+  // background
+  // var bgGl = getGLContext("canvas-main-bg");
+  // program = createProgram(bgGl, vShader, fShader);
+  // setWebGl(bgGl, program);
+  // for (let j = 0; j < NUM_BG_OBJ; ++j) 
+  //   drawShape(bgGl, bgShapes, j);
 
-  // como animar o fundo?
+  
 
   // cards shapes
   var gl;
@@ -53,75 +53,73 @@ function main(NUMBER_OBJS, NUM_BG_OBJ, bgShapes, shapes) {
     program = createProgram(gl, vShader, fShader);
     setWebGl(gl, program);
     drawShape(gl, shapes, i);
+
+    // for (var j = 0; j < NUMBER_OBJS; ++j) {
+
+    // }
   }
 
-  function setWebGl(gl, program) {
-    positionAttribLocation = gl.getAttribLocation(program, "a_position");
-    colorAttribLocation = gl.getAttribLocation(program, "a_color");
-    matrixLocation = gl.getUniformLocation(program, "u_matrix");
   
-    var positionBuffer = gl.createBuffer();
-    vao = gl.createVertexArray();
-    gl.bindVertexArray(vao);
-    gl.enableVertexAttribArray(positionAttribLocation);
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); 
-    setGeometry(gl);
-    
-    var size = 3;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
-    gl.vertexAttribPointer(positionAttribLocation, size, type, normalize, stride, offset);
+}
 
-    var colorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    setColors(gl);
-    gl.enableVertexAttribArray(colorAttribLocation);
-    gl.vertexAttribPointer(colorAttribLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
-  }
+function setWebGl(gl, program) {
+  positionAttribLocation = gl.getAttribLocation(program, "a_position");
+  colorAttribLocation = gl.getAttribLocation(program, "a_color");
+  matrixLocation = gl.getUniformLocation(program, "u_matrix");
+
+  var positionBuffer = gl.createBuffer();
+  vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  gl.enableVertexAttribArray(positionAttribLocation);
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); 
+  setGeometry(gl);
   
-  function drawShape(gl, shapes, index) {
-    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    
-    gl.clearColor(0, 0, 0, 0); // Clear the canvas
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-   //gl.enable(gl.CULL_TEST);
-    
-    gl.useProgram(program);
-    gl.bindVertexArray(vao);
-    // gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+  var size = 3;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(positionAttribLocation, size, type, normalize, stride, offset);
+
+  var colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  setColors(gl);
+  gl.enableVertexAttribArray(colorAttribLocation);
+  gl.vertexAttribPointer(colorAttribLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+}
   
-    // gl.uniform4fv(colorLocation, shape.color); 
-    // var translationMatrix = m3.translation(shape.translation[0], shape.translation[1]);
-    // var rotationMatrix = m3.rotation(shape.rotation);
-    // var scaleMatrix = m3.scaling(shape.scale[0], shape.scale[1]);
-    // var matrix = m3.multiply(translationMatrix, rotationMatrix);
-    // matrix = m3.multiply(matrix, scaleMatrix);
-    var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 500);
-    matrix = m4.translate(matrix, shapes[index].translation[0], shapes[index].translation[1], shapes[index].translation[2]);
-    matrix = m4.xRotate(matrix, shapes[index].rotation[0]);
-    matrix = m4.yRotate(matrix, shapes[index].rotation[1]);
-    matrix = m4.zRotate(matrix, shapes[index].rotation[2]);
-    matrix = m4.scale(matrix, shapes[index].scale[0], shapes[index].scale[1], shapes[index].scale[2]);
+function drawShape(gl, shapes, index) {
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   
-    gl.uniformMatrix4fv(matrixLocation, false, matrix);
+  gl.clearColor(0, 0, 0, 0); // Clear the canvas
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST);
+  //gl.enable(gl.CULL_TEST);
   
-    gl.drawArrays(gl.TRIANGLES, 0, 12 * 3); 
-  }
+  gl.useProgram(program);
+  gl.bindVertexArray(vao);
+  // gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
+  // gl.uniform4fv(colorLocation, shape.color); 
+  // var translationMatrix = m3.translation(shape.translation[0], shape.translation[1]);
+  // var rotationMatrix = m3.rotation(shape.rotation);
+  // var scaleMatrix = m3.scaling(shape.scale[0], shape.scale[1]);
+  // var matrix = m3.multiply(translationMatrix, rotationMatrix);
+  // matrix = m3.multiply(matrix, scaleMatrix);
+  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 500);
+  matrix = m4.translate(matrix, shapes[index].translation[0], shapes[index].translation[1], shapes[index].translation[2]);
+  matrix = m4.xRotate(matrix, shapes[index].rotation[0]);
+  matrix = m4.yRotate(matrix, shapes[index].rotation[1]);
+  matrix = m4.zRotate(matrix, shapes[index].rotation[2]);
+  matrix = m4.scale(matrix, shapes[index].scale[0], shapes[index].scale[1], shapes[index].scale[2]);
+
+  gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+  gl.drawArrays(gl.TRIANGLES, 0, 12 * 3); 
 }
 
 
-// canvas do fundo
-function generateBackground() {
-  var main = document.getElementById("main-container");
-  var canvas = document.createElement("canvas");
-  canvas.setAttribute("id", "canvas-main-bg");
-  canvas.classList = "bg-canvas";
-  main.appendChild(canvas);
-}
 
 function generateCards() {
   var main = document.getElementById("main-container");
@@ -137,24 +135,48 @@ function generateCards() {
     canvas.classList = "canvas";
     card.appendChild(canvas);
 
+    var uiC = document.createElement("div");
+    uiC.setAttribute("id", "uiContainer");
+    var ui = document.createElement("div");
+    ui.setAttribute("id", "ui");
+    
+    var x = document.createElement("div");
+    x.setAttribute("id", "x" + i);
+    x.textContent = i;
+    ui.appendChild(x);
+
+    uiC.appendChild(ui);
+    card.appendChild(uiC);
+    
     info = document.createElement("div");
     info.classList = "info";
     text = document.createElement("h3");
     text.textContent = `R$ ${cardShapes[i].price}`;
     info.appendChild(text);
-
+    
     btn = document.createElement("button");
     btn.textContent = "comprar";
     btn.classList = "btn";
     btn.addEventListener("click", function() { buyButton(i)});
     info.appendChild(btn);
     card.appendChild(info);
-
+    
     main.appendChild(card);
   }
 }
 
-function generateShapes(number,  mult1, mult2) {
+function setupUI(gl, shapes, index) {
+  webglLessonsUI.setupSlider("#x" + index, { value: shapes[index].translation[0], slide: updatePosition(index, 0), max: gl.canvas.width });
+  
+  function updatePosition(i, j) {
+    return function (event, ui) {
+      shapes[i].translation[j] = ui.value;
+      // drawScene(gl, shapes, i);
+    };
+  }
+}
+
+function generateShapes(number, mult1, mult2) {
   var shapes = [];
   for (let i = 0; i < number; ++i) {
     shapes.push({
@@ -169,6 +191,14 @@ function generateShapes(number,  mult1, mult2) {
 }
 
 
+// canvas do fundo
+// function generateBackground() {
+//   var main = document.getElementById("main-container");
+//   var canvas = document.createElement("canvas");
+//   canvas.setAttribute("id", "canvas-main-bg");
+//   canvas.classList = "bg-canvas";
+//   main.appendChild(canvas);
+// }
 
 function buyButton(numCanvas) {
   console.log(`item ${numCanvas} comprado: R$ ${cardShapes[numCanvas].price}`);
@@ -190,12 +220,16 @@ function start() {
     location.href = "./cart.html";
   })
 
-  generateBackground();
-  bgShapes = generateShapes(NUM_BG_OBJS, 500, 5);
+  window.addEventListener("beforeunload", function() {
+    localStorage.setItem("cartCounter", cartCounter)
+  });
+
+  // generateBackground();
+  // bgShapes = generateShapes(NUM_BG_OBJS, 500, 5);
   cardShapes = generateShapes(NUMBER_OBJS, 100, 1);
   generateCards();
   
-  main(NUMBER_OBJS, NUM_BG_OBJS, bgShapes, cardShapes);
+  main(NUMBER_OBJS, cardShapes);
 }
 
 start();
