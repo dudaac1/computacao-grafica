@@ -36,8 +36,8 @@ var iGl, iProgram, iVao, iColorAttribLoc, iPosAttribLoc, iTextCoordAttribLoc, iM
 
 var cubeTextures, tAux = 0;
 
-// var iCamera = [degToRad(90), degToRad(45), degToRad(180), 200];
-var iCamera = [degToRad(310), degToRad(175), degToRad(215), 300];
+var iCamera = [degToRad(90), degToRad(45), degToRad(180), 200];
+// var iCamera = [degToRad(310), degToRad(175), degToRad(215), 300];
 
 function setIndexWebGl(gl, shapes, index) {
   iPosAttribLoc = gl.getAttribLocation(iProgram, "a_position");
@@ -92,9 +92,11 @@ function setIndexWebGl(gl, shapes, index) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
-
     drawIndexShape(gl, shapes, index);
+    // mainCalls(index, shapes);
+    // iProgram = createProgram(gl, vertexShaderIndex, fragmentShaderIndex);
   });
+  
 }
 
 function drawIndexShape(gl, shapes, index) {
@@ -186,16 +188,18 @@ function mainCalls(index, SHAPES) {
   iGl = getGLContext(`canvas${index}`);
   iProgram = createProgram(iGl, vertexShaderIndex, fragmentShaderIndex);
   setIndexWebGl(iGl, SHAPES, index);
-  drawIndexShape(iGl, SHAPES, index);
+  // drawIndexShape(iGl, SHAPES, index);
+  return iGl;
 }
 
 function index_main(NUMBER_OBJS, SHAPES) {
   // var iGl;
   cubeTextures = getCubeTexturesList();
-  console.log(cubeTextures);
+  // console.log(cubeTextures);
+  var gl;
   for (let i = 0; i < NUMBER_OBJS; ++i) {
-    mainCalls(i, SHAPES);
+    gl = mainCalls(i, SHAPES);
     setupUI(SHAPES, i);
-
+    drawIndexShape(gl, SHAPES, i);
   }
 }

@@ -182,12 +182,12 @@ function setCubeTexCoords(gl) {
 
 function getCubeTexturesList() {
   return [
-    "./resources/textures/cube/jjuliar.png",
     "./resources/textures/cube/rocky.png",
+    "./resources/textures/cube/jjuliar.png",
     "./resources/textures/cube/puppies.png",
-    "./resources/textures/cube/fabrics.png",
-    "./resources/textures/cube/flower.png",
     "./resources/textures/cube/paintings.png",
+    "./resources/textures/cube/flower.png",
+    "./resources/textures/cube/fabrics.png",
     "./resources/textures/cube/rocky.png",
     "./resources/textures/cube/jjuliar.png",
   ]

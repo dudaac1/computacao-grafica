@@ -44,9 +44,18 @@ function bg_main(gl, shape) {
   gl.enableVertexAttribArray(bColorAttribLoc);
   gl.vertexAttribPointer(bColorAttribLoc, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 
-  drawScene();
+  // drawScene();
+  var then = 0;
+  var deltaTime;
 
-  function drawScene() {
+  requestAnimationFrame(drawScene);
+
+  function drawScene(now) {
+
+    now *= 0.001;
+    deltaTime = now - then;
+    then = now;
+
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(0, 0, 0, 0);
@@ -55,6 +64,12 @@ function bg_main(gl, shape) {
     // gl.enable(gl.CULL_TEST);
     gl.useProgram(bProgram);
     gl.bindVertexArray(bVao);
+
+    shape.rotation[0] += Math.sin(0.2 * deltaTime);
+    shape.rotation[1] += 1.5 * deltaTime;
+    shape.rotation[2] += 0.5 * deltaTime;
+    shape.translation[0] += Math.sin(Math.PI);
+    shape.translation[1] += 1.2 * deltaTime;
 
     var bMatrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 500);
     bMatrix = m4.translate(bMatrix, shape.translation[0], shape.translation[1], shape.translation[2]);
@@ -65,6 +80,8 @@ function bg_main(gl, shape) {
     gl.uniformMatrix4fv(bMatrixLoc, false, bMatrix);
 
     gl.drawArrays(gl.TRIANGLES, 0, 12 * 3);
+
+    requestAnimationFrame(drawScene);
   }
 }
 
@@ -76,7 +93,7 @@ function bg_start() {
   main.appendChild(canvas);
 
   var b_shape = {
-    translation: [200, 200, 200],
+    translation: [200, 200, 0],
     rotation: [20, 15, 10],
     scale: [1, 1, 1],
     color: [Math.random(), Math.random(), Math.random(), 1]
