@@ -24,7 +24,10 @@ const fragmentShaderBg = `#version 300 es
   }
 `;
 
-function bg_main(gl, shape) {
+async function bg_main(gl, shape) {
+  // const response = await fetch();
+  // const text = await response.text();
+
   var bProgram = createProgram(gl, vertexShaderBg, fragmentShaderBg);
   var bPosAttribLoc = gl.getAttribLocation(bProgram, "a_position");
   var bColorAttribLoc = gl.getAttribLocation(bProgram, "a_color");

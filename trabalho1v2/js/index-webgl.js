@@ -36,7 +36,7 @@ var iGl, iProgram, iVao, iColorAttribLoc, iPosAttribLoc, iTextCoordAttribLoc, iM
 
 var cubeTextures, tAux = 0;
 
-var iCamera = [degToRad(90), degToRad(45), degToRad(180), 200];
+var iCamera = [degToRad(179), degToRad(90), degToRad(0), 3];
 // var iCamera = [degToRad(310), degToRad(175), degToRad(215), 300];
 
 function setIndexWebGl(gl, shapes, index) {
@@ -112,7 +112,7 @@ function drawIndexShape(gl, shapes, index) {
   var FOVRadians = degToRad(60);
   var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   var zNear = 1;
-  var zFar = 600;
+  var zFar = 300;
   var projMatrix = m4.perspective(FOVRadians, aspect, zNear, zFar);
 
   /*
@@ -150,7 +150,7 @@ function setupUI(shapes, index) {
   webglLessonsUI.setupSlider(`#x${index}`, { value: radToDeg(iCamera[0]), slide: updateAngleX(index), min: 0, max: 360 });
   webglLessonsUI.setupSlider(`#y${index}`, { value: radToDeg(iCamera[1]), slide: updateAngleY(index), min: 0, max: 360 });
   webglLessonsUI.setupSlider(`#z${index}`, { value: radToDeg(iCamera[2]), slide: updateAngleZ(index), min: 0, max: 360 });
-  webglLessonsUI.setupSlider(`#zoom${index}`, { value: iCamera[3], slide: updateZoom(index), min: 0, max: 500 });
+  webglLessonsUI.setupSlider(`#zoom${index}`, { value: iCamera[3], slide: updateZoom(index), min: 0, max: 10 });
 
   // drawScene();
 

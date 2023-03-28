@@ -6,58 +6,58 @@ function setCubeGeometry(gl) {
     new Float32Array([
 
       // front face
-      -100, -100, 0.0,
-      -100, 100, 0.0,
-      100, 100, 0.0,
+      -1, -1, -1,
+      -1, 1, -1,
+      1, 1, -1,
 
-      -100, -100, 0.0,
-      100, 100, 0.0,
-      100, -100, 0.0,
+      -1, -1, -1,
+      1, 1, -1,
+      1, -1, -1,
 
       // left face
-      -100, -100, 100,
-      -100, 100, 100,
-      -100, 100, 0.0,
+      -1, -1, 1,
+      -1, 1, 1,
+      -1, 1, -1,
 
-      -100, -100, 100,
-      -100, 100, 0.0,
-      -100, -100, 0.0,
+      -1, -1, 1,
+      -1, 1, -1,
+      -1, -1, -1,
 
       // bottom face
-      -100, -100, 0.0,
-      100, -100, 0.0,
-      100, -100, 100,
+      -1, -1, -1,
+      1, -1, -1,
+      1, -1, 1,
 
-      100, -100, 100,
-      -100, -100, 100,
-      -100, -100, 0.0,
+      1, -1, 1,
+      -1, -1, 1,
+      -1, -1, -1,
 
       //back face
-      100, 100, 100,
-      100, -100, 100,
-      -100, -100, 100,
+      1, 1, 1,
+      1, -1, 1,
+      -1, -1, 1,
 
-      -100, -100, 100,
-      -100, 100, 100,
-      100, 100, 100,
+      -1, -1, 1,
+      -1, 1, 1,
+      1, 1, 1,
 
       // right face
-      100, 100, 0.0,
-      100, -100, 0.0,
-      100, -100, 100,
+      1, 1, -1,
+      1, -1, -1,
+      1, -1, 1,
 
-      100, -100, 100,
-      100, 100, 100,
-      100, 100, 0.0,
+      1, -1, 1,
+      1, 1, 1,
+      1, 1, -1,
 
       // up face
-      -100, 100, 0.0,
-      100, 100, 100,
-      -100, 100, 100,
+      -1, 1, -1,
+      1, 1, 1,
+      -1, 1, 1,
 
-      100, 100, 0.0,
-      100, 100, 100,
-      -100, 100, 0.0
+      1, 1, -1,
+      1, 1, 1,
+      -1, 1, -1
     ]),
     gl.STATIC_DRAW);
 }
@@ -135,11 +135,12 @@ function setCubeTexCoords(gl) {
   gl.bufferData(
     gl.ARRAY_BUFFER,
     new Float32Array([
-      0   , 0.5, 
+     
+      0.25, 0  ,
       0   , 0  ,
+      0   , 0.5, 
       0.25, 0  ,
       0   , 0.5,
-      0.25, 0  ,
       0.25, 0.5,
     
       0.5 , 0  , 
@@ -185,10 +186,10 @@ function getCubeTexturesList() {
     "./resources/textures/cube/rocky.png",
     "./resources/textures/cube/jjuliar.png",
     "./resources/textures/cube/puppies.png",
+    "./resources/textures/cube/apolo.png",
     "./resources/textures/cube/paintings.png",
     "./resources/textures/cube/flower.png",
     "./resources/textures/cube/fabrics.png",
-    "./resources/textures/cube/rocky.png",
     "./resources/textures/cube/jjuliar.png",
   ]
 }
