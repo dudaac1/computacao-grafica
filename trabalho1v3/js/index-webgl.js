@@ -85,9 +85,7 @@ function setIndexWebGl(gl, shapes, index) {
 
   // Asynchronously load an image
   var image = new Image();
-  // image.src = "./resources/textures/cube/rocky.png";
   image.src = cubeTextures[shapes[index].texture];
-  // image.src = cubeTextures[tAux];
   image.addEventListener('load', function () {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -193,9 +191,7 @@ function mainCalls(index, SHAPES) {
 }
 
 function index_main(NUMBER_OBJS, SHAPES) {
-  // var iGl;
   cubeTextures = getCubeTexturesList();
-  // console.log(cubeTextures);
   var gl;
   for (let i = 0; i < NUMBER_OBJS; ++i) {
     gl = mainCalls(i, SHAPES);

@@ -2,6 +2,7 @@
 
 const NUMBER_OBJS = 8;
 let cartCounter, cartCounterDiv, indexShapes;
+var cartItems = [];
 
 function generateIndexCards() {
   var main = document.getElementById("main-container");
@@ -52,6 +53,8 @@ function buyButton(numCanvas) {
   console.log(`item ${numCanvas} comprado: R$ ${indexShapes[numCanvas].price}`);
   cartCounter++;
   cartCounterDiv.textContent = cartCounter;
+  cartItems.push(indexShapes[numCanvas]);
+  console.log(cartItems);
   // save object data in array
 }
 

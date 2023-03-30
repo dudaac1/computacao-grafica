@@ -593,5 +593,7 @@ async function main(urlObj) {
 }
 
 main('./plant1/Plant N310122.obj');
-main('./plant2/Plant origami pot N100622.obj');
+// main('./plant2/Plant origami pot N100622.obj');
+
+
 // main('./plant1/Plant N310122.obj');
