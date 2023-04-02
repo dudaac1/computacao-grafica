@@ -36,8 +36,7 @@ var iGl, iProgram, iVao, iColorAttribLoc, iPosAttribLoc, iTextCoordAttribLoc, iM
 
 var cubeTextures, tAux = 0;
 
-var iCamera = [degToRad(179), degToRad(90), degToRad(0), 3];
-// var iCamera = [degToRad(310), degToRad(175), degToRad(215), 300];
+var iCamera = [degToRad(0), degToRad(0), degToRad(0), 4];
 
 function setIndexWebGl(gl, shapes, index) {
   iPosAttribLoc = gl.getAttribLocation(iProgram, "a_position");
@@ -55,8 +54,8 @@ function setIndexWebGl(gl, shapes, index) {
   var size = 3;          // 2 components per iteration
   var type = gl.FLOAT;   // the data is 32bit floats
   var normalize = false; // don't normalize the data
-  var stride = 0;        
-  var offset = 0;        
+  var stride = 0;
+  var offset = 0;
   gl.vertexAttribPointer(iPosAttribLoc, size, type, normalize, stride, offset);
 
   // colors
@@ -67,19 +66,19 @@ function setIndexWebGl(gl, shapes, index) {
   // gl.vertexAttribPointer(iColorAttribLoc, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 
   // textures
-  var texcoordBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+  var iTexcoordBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, iTexcoordBuffer);
   gl.enableVertexAttribArray(iTextCoordAttribLoc);
   setCubeTexCoords(gl);
   var size = 2;          // 2 components per iteration
-  var type = gl.FLOAT;   
+  var type = gl.FLOAT;
   var normalize = true;  // convert from 0-255 to 0.0-1.0
-  var stride = 0;        
-  var offset = 0;        
+  var stride = 0;
+  var offset = 0;
   gl.vertexAttribPointer(iTextCoordAttribLoc, size, type, normalize, stride, offset);
-  var texture = gl.createTexture();
+  var iTexture = gl.createTexture();
   gl.activeTexture(gl.TEXTURE0 + 0);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.bindTexture(gl.TEXTURE_2D, iTexture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 192, 0, 1]));
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
@@ -87,17 +86,17 @@ function setIndexWebGl(gl, shapes, index) {
   var image = new Image();
   image.src = cubeTextures[shapes[index].texture];
   image.addEventListener('load', function () {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(gl.TEXTURE_2D, iTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.generateMipmap(gl.TEXTURE_2D);
-    drawIndexShape(gl, shapes, index);
     // mainCalls(index, shapes);
+    drawIndexShape(gl, shapes, index);
     // iProgram = createProgram(gl, vertexShaderIndex, fragmentShaderIndex);
   });
-  
+
 }
 
-function drawIndexShape(gl, shapes, index) {
+function drawIndexShape(gl) {
   webglUtils.resizeCanvasToDisplaySize(gl.canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.clearColor(0, 0, 0, 0);
@@ -110,31 +109,14 @@ function drawIndexShape(gl, shapes, index) {
   var FOVRadians = degToRad(60);
   var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   var zNear = 1;
-  var zFar = 300;
+  var zFar = 10;
   var projMatrix = m4.perspective(FOVRadians, aspect, zNear, zFar);
-
-  /*
-  var iMatrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 500);
-  iMatrix = m4.translate(iMatrix, shapes[index].translation[0], shapes[index].translation[1], shapes[index].translation[2]);
-  iMatrix = m4.xRotate(iMatrix, shapes[index].rotation[0]);
-  iMatrix = m4.yRotate(iMatrix, shapes[index].rotation[1]);
-  iMatrix = m4.zRotate(iMatrix, shapes[index].rotation[2]);
-  iMatrix = m4.scale(iMatrix, shapes[index].scale[0], shapes[index].scale[1], shapes[index].scale[2]);
-  gl.uniformMatrix4fv(iMatrixLoc, false, iMatrix);
-  */
-
-  var radius = 0;
 
   var camMatrix = m4.xRotation(iCamera[0]);
   camMatrix = m4.yRotate(camMatrix, iCamera[1]);
   camMatrix = m4.zRotate(camMatrix, iCamera[2]);
-  camMatrix = m4.translate(camMatrix, 0, iCamera[3], 0);
+  camMatrix = m4.translate(camMatrix, 0, 0, iCamera[3]);
 
-  var cubePos = [radius, 0, 0];
-  var camPos = [camMatrix[12], camMatrix[13], camMatrix[14]];
-  var up = [0, 1, 0];
-
-  var camMatrix = m4.lookAt(camPos, cubePos, up);
   var viewMatrix = m4.inverse(camMatrix);
   var viewProjectionMatrix = m4.multiply(projMatrix, viewMatrix);
   var matrix = m4.translate(viewProjectionMatrix, 0, 0, 0);
@@ -143,14 +125,11 @@ function drawIndexShape(gl, shapes, index) {
   gl.drawArrays(gl.TRIANGLES, 0, 12 * 3);
 }
 
-// function setupUI(gl, shapes, index) {
 function setupUI(shapes, index) {
   webglLessonsUI.setupSlider(`#x${index}`, { value: radToDeg(iCamera[0]), slide: updateAngleX(index), min: 0, max: 360 });
   webglLessonsUI.setupSlider(`#y${index}`, { value: radToDeg(iCamera[1]), slide: updateAngleY(index), min: 0, max: 360 });
   webglLessonsUI.setupSlider(`#z${index}`, { value: radToDeg(iCamera[2]), slide: updateAngleZ(index), min: 0, max: 360 });
-  webglLessonsUI.setupSlider(`#zoom${index}`, { value: iCamera[3], slide: updateZoom(index), min: 0, max: 10 });
-
-  // drawScene();
+  webglLessonsUI.setupSlider(`#zoom${index}`, { value: iCamera[3], slide: updateZoom(index), min: 0, max: 12 });
 
   function updateAngleX(i) {
     return function (event, ui) {
@@ -184,7 +163,7 @@ function setupUI(shapes, index) {
 
 function mainCalls(index, SHAPES) {
   iGl = getGLContext(`canvas${index}`);
-  iProgram = createProgram(iGl, vertexShaderIndex, fragmentShaderIndex);
+  iProgram = createProgramFromSources(iGl, [vertexShaderIndex, fragmentShaderIndex]);
   setIndexWebGl(iGl, SHAPES, index);
   // drawIndexShape(iGl, SHAPES, index);
   return iGl;

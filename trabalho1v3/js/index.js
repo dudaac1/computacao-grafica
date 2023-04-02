@@ -2,7 +2,7 @@
 
 const NUMBER_OBJS = 8;
 let cartCounter, cartCounterDiv, indexShapes;
-var cartItems = [];
+var cartItems;
 
 function generateIndexCards() {
   var main = document.getElementById("main-container");
@@ -35,7 +35,7 @@ function generateIndexCards() {
     btn = document.createElement("button");
     btn.textContent = "comprar";
     btn.classList = "btn";
-    btn.addEventListener("click", function () { buyButton(i) });
+    btn.addEventListener("click", function () { buyItem(i) });
     info.appendChild(btn);
     card.appendChild(info);
 
@@ -49,32 +49,36 @@ function generateIndexCards() {
   }
 }
 
-function buyButton(numCanvas) {
-  console.log(`item ${numCanvas} comprado: R$ ${indexShapes[numCanvas].price}`);
+function buyItem(numItem) {
+  console.log(`item ${numItem} comprado: R$ ${indexShapes[numItem].price}`);
   cartCounter++;
   cartCounterDiv.textContent = cartCounter;
-  cartItems.push(indexShapes[numCanvas]);
+  cartItems.push(indexShapes[numItem]);
   console.log(cartItems);
-  // save object data in array
 }
 
 function index_start() {
-  // get cartCounter number from local storage and update values in screen
-  cartCounter = localStorage.getItem("cartCounter");
-  if (cartCounter == null) cartCounter = 0;
+  cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  if (cartItems != null) 
+    cartCounter = cartItems.length;
+  else {
+    cartItems = [];
+    cartCounter = 0;
+  }
+  
   cartCounterDiv = document.getElementById("cart-counter");
   cartCounterDiv.textContent = cartCounter;
 
   // set function for cart button
   var cartBtn = document.getElementById("cart-button");
   cartBtn.addEventListener("click", function () {
-    localStorage.setItem("cartCounter", cartCounter);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
     location.href = "./cart.html";
   })
 
   // set update cartCounter in local storage before reload
   window.addEventListener("beforeunload", function () {
-    localStorage.setItem("cartCounter", cartCounter)
+    localStorage.setItem("cartItems", JSON.stringify(cartItems))
   });
 
   // creating objects from index page and calling main()
@@ -95,7 +99,7 @@ function index_start() {
         // rotation: [50, 100, 50],
         // rotation: [degToRad(Math.random() * 75), degToRad(Math.random() * 75), degToRad(Math.random() * 75)],
         // scale: [0.2 * mult2, 0.2 * mult2, 0.2 * mult2],
-        // color: [Math.random(), Math.random(), Math.random(), 1],
+        color: [Math.random(), Math.random(), Math.random(), 1],
         texture: texAux++,
         price: Math.round(Math.random() * 50)
       });

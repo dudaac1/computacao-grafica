@@ -19,7 +19,7 @@
 body {
   margin: 0;
   font-size: 16px;
-  background-color:var(--white-color);
+  background-color: var(--white-color);
 }
 
 header {
@@ -33,14 +33,11 @@ header {
 
 main {
   position: absolute;
-  /* background-color: aqua; */
   width: 100%;
   padding: 1rem;
   top: 120px;
   bottom: 60px;
   z-index: -1;
-  /* width: 50%; */
-  /* height: 50%; */
 }
 
 footer {
@@ -54,6 +51,7 @@ footer {
 
 /*****************************************************************/
 /*                             PAGE                              */
+/*****************************************************************/
 
 .container {
   max-width: 1500px;
@@ -70,7 +68,9 @@ footer {
   height: 100%;
 }
 
-main .flex { flex-wrap: wrap; }
+main .flex {
+  flex-wrap: wrap;
+}
 
 .grid {
   display: grid;
@@ -80,41 +80,50 @@ main .flex { flex-wrap: wrap; }
   height: 100%;
 }
 
+.bg-canvas {
+  width: 100%;
+  position: fixed;
+  z-index: -10;
+}
+
 /*****************************************************************/
 /*                              FONT                             */
+/*****************************************************************/
 
 h1 {
   font-size: 3rem;
   font-family: 'Roboto Bold', sans-serif;
 }
 
-header a { 
-  text-decoration: none; 
+header a {
+  text-decoration: none;
 }
 
-a { 
+a {
   color: var(--primary-color);
-  text-decoration: underline dotted var(--primary-color) 1px; 
+  text-decoration: underline dotted var(--primary-color) 1px;
 }
 
-a:hover { 
+a:hover {
   color: var(--light-color);
   text-decoration-style: solid;
 }
 
 /*****************************************************************/
-/*                             OTHERS                            */
-.cart-header { 
-  text-align: center; 
+/*                     HEADER CART CONTER                        */
+/*****************************************************************/
+
+.cart-button {
+  text-align: center;
   min-height: 3rem;
 }
 
-.cart-header a { 
-  text-decoration: none; 
+.cart-button a {
+  text-decoration: none;
   cursor: pointer;
 }
 
-.cart-header .cart-counter {
+.cart-button .cart-counter {
   width: 3rem;
   max-height: 2rem;
   color: white;
@@ -123,62 +132,66 @@ a:hover {
   text-align: center;
 }
 
-.cart-header .cart-counter a { 
-  text-decoration: none; 
+.cart-button .cart-counter a {
+  text-decoration: none;
 }
 
-.bg-canvas {
-  width: 100%;
-  position: fixed;
-  z-index: -10;
-}
+/*****************************************************************/
+/*                          INDEX CARDS                          */
+/*****************************************************************/
 
 .card {
-  height: 22rem;
-  max-width: 20rem;
+  height: 25rem;
+  max-width: 15rem;
   z-index: 1;
   margin: 0.2rem;
   padding: 0.2rem;
   border-radius: 1rem;
   margin: 1rem;
+  background-color: rgba(255, 255, 240, 0.8);
 }
 
 .card .canvas {
-  height: 75%;
+  height: 60%;
   border: 1px solid black;
   width: 100%;
   border-radius: 1rem;
 }
 
 .info {
-  margin-top: 1em;
+  margin: 1em 0em;
   text-align: center;
   padding: 0.5rem;
 }
 
-.info h3 { 
-  font-size: 1.5rem; 
+.info h3 {
+  font-size: 1.5rem;
+  display: inline;
 }
 
 .info button {
   padding: 0.2rem 0.6rem;
-  margin: 0.2rem;
+  margin: -0.2rem 0rem 0rem 1rem;
   cursor: pointer;
 }
 
-.cart-box { 
+/*****************************************************************/
+/*                           CART PAGE                           */
+/*****************************************************************/
+
+.cart-container {
   height: 100vh;
   width: 90vw;
   margin-bottom: 50rem;
 }
 
-.cart-box h2 {
+.cart-container h2 {
   margin-bottom: 0.5rem;
   max-height: 10vh;
 }
 
-.cart-box canvas {
-  border: 1px solid black;
+.cart-container canvas {
+  border: 1px solid black; 
   width: 100%;
   border-radius: 1rem;
   height: 75%;
@@ -190,30 +203,36 @@ a:hover {
 
 /*****************************************************************/
 /*                        WEBGL LESSONS UI                       */
+/*****************************************************************/
 
 #uiContainer {
   top: 10px;
   right: 10px;
   z-index: 3;
-  font-family: monospace;
+  /* font-family: monospace; */
   pointer-events: none;
 
   text-shadow:
-   -1px -1px 0 #FFF,
+    -1px -1px 0 #FFF,
     1px -1px 0 #FFF,
     -1px 1px 0 #FFF,
-     1px 1px 0 #FFF;
+    1px 1px 0 #FFF;
 }
 
-#ui > div {
+#ui>div {
   pointer-events: none;
 }
 
-#ui input, #ui select, #ui option, #ui canvas {
+#ui input,
+#ui select,
+#ui option,
+#ui canvas {
   pointer-events: auto;
 }
 
-.gman-slider-label, .gman-widget-label, .gman-checkbox-label {
+.gman-slider-label,
+.gman-widget-label,
+.gman-checkbox-label {
   font-size: small;
   min-width: 3.5em;
   text-align: center;
@@ -230,23 +249,25 @@ a:hover {
   min-width: 3em;
 }
 
-.gman-slider-upper { 
+.gman-slider-upper {
   height: 1.5em;
 }
 
-.gman-slider-outer, .gman-widget-outer {
+.gman-slider-outer,
+.gman-widget-outer {
   float: left;
   display: flex;
   align-items: center;
   height: 1.7em;
 }
 
-.gman-widget-slider, .gman-widget-checkbox, .gman-widget-select {
+.gman-widget-slider,
+.gman-widget-checkbox,
+.gman-widget-select {
   opacity: 0.5;
   font-size: large;
   margin-left: .3em;
   margin-right: .3em;
-  
 }
 
 .gman-widget-select {
@@ -254,36 +275,37 @@ a:hover {
 }
 
 .gman-widget-slider {
-  opacity: 0.7;
+  opacity: 0.9;
   min-width: 120px;
   accent-color: var(--primary-color);
 }
 
 /*****************************************************************/
 /*                           RESPONSIVE                          */
+/*****************************************************************/
 
 @media(max-width: 768px) {
-  header .container >* { 
+  header .container>* {
     margin: 0.5rem 0;
     text-align: center;
     overflow: hidden;
   }
 
-  main { 
-    top: 13rem; 
+  main {
+    top: 13rem;
     text-align: center;
   }
 
-  .grid { 
-    grid-template-columns: 1fr; 
+  .grid {
+    grid-template-columns: 1fr;
   }
 
-  .flex { 
-    flex-direction: column; 
+  .flex {
+    flex-direction: column;
   }
 
-  main .flex { 
-    flex-direction: row; 
+  main .flex {
+    flex-direction: row;
   }
 
   h1 {
