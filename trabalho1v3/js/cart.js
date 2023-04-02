@@ -1,66 +1,73 @@
-var cartItems;
+let cartItems, cartCounter = 0, cartPrice = 0, cartTextures;
 
 function cart_start() {
-  let cartCounter = 0, cartPrice = 0;
-  let textures = getCubeTexturesList();
-  // var cubeTextures = getCubeTexturesList();
-  
+  cartTextures = getCubeTexturesList();
+
   cartItems = getCartItems();
   if (cartItems.length != 0) {
-    cartPrice = cartItems.reduce((sum, curr) => {
-      return sum += curr.price
-    }, 0);
+    calculeCartPrice();
     cartCounter = cartItems.length;
-  } 
+  }
+  setVisualValues();
 
-  setCartItensValue();
+  var removeItemBtn = document.getElementById("remove-item-btn");
+  removeItemBtn.addEventListener("click", () => removeItemFromCart());
 
   var clearCartBtn = document.getElementById("clear-cart");
   clearCartBtn.addEventListener("click", function () {
     if (cartCounter != 0) {
-      // cartShapes = [];
       cartItems = [];
-      cartCounter = 0;
       cartPrice = 0;
-      setCartItensValue();
       saveCartItems([]);
-      cart_main(cartItems, textures);
+      setVisualValues();
+      cart_main(cartItems, cartTextures);
     }
   });
 
-  cart_main(cartItems, textures);
-
-  function setCartItensValue() {
-    var cartCounterDiv = document.getElementById("cart-counter");
-    cartCounterDiv.textContent = cartCounter;
-    var cartCounterSpan = document.getElementById("cart-counter-span");
-    cartCounterSpan.textContent = cartCounter;
-    var cartPriceSpan = document.getElementById("cart-price-span");
-    cartPriceSpan.textContent = cartPrice;
-  }
+  cart_main(cartItems, cartTextures);
 }
 
-// function generateCartShapes(mult2, canvasWidth) {
-//   var shapes = [], aux = 0, j = 0;
-//   var txBase = 50, tyBase = 100, tMult = 150, tx, ty;
-//   for (let i = 0; i < cartCounter; ++i) {
-//     tx = txBase + (tMult * aux);
-//     ++aux;
-//     ty = tyBase + tMult * j;
-//     if (tx + tMult > canvasWidth) {
-//       j++;
-//       aux = 0;
-//     }
-//     shapes.push({
-//       translation: [tx, ty, 0],
-//       // rotation: [0, 0, 0],
-//       rotation: [degToRad(Math.random() * 75), degToRad(Math.random() * 75), degToRad(Math.random() * 75)],
-//       scale: [0.2 * mult2, 0.2 * mult2, 0.2 * mult2],
-//       color: [Math.random(), Math.random(), Math.random(), 1],
-//       price: Math.round(Math.random() * 50)
-//     });
-//   }
-//   return shapes;
-// }
+function calculeCartPrice() {
+  cartPrice = cartItems.reduce((sum, curr) => {
+    return sum += curr.price
+  }, 0);
+}
+
+function setVisualValues() {
+  var cartCounter = cartItems.length;
+  var cartCounterDiv = document.getElementById("cart-counter");
+  cartCounterDiv.textContent = cartCounter;
+  var cartCounterSpan = document.getElementById("cart-counter-span");
+  cartCounterSpan.textContent = cartCounter;
+  var cartPriceSpan = document.getElementById("cart-price-span");
+  cartPriceSpan.textContent = cartPrice;
+
+  var select = document.getElementById("cart-items-select");
+  var option;
+
+  select.innerHTML = "";
+  option = document.createElement("option");
+  option.textContent = "-- ESCOLHA UM ITEM --";
+  select.appendChild(option);
+
+  cartItems.forEach((item, index) => {
+    option = document.createElement("option");
+    option.setAttribute("value", `${index}`);
+    option.textContent = `Cubo ${index+1}: textura ${item.texture}, R$ ${item.price}`;
+    select.appendChild(option);
+  });
+}
+
+function removeItemFromCart() {
+  if (cartCounter != 0) {
+    var select = document.getElementById("cart-items-select");
+    var index = select.value;
+    cartItems.splice(index, 1);
+    saveCartItems(cartItems);
+    calculeCartPrice();
+    setVisualValues();
+    cart_main(cartItems, cartTextures);
+  }
+}
 
 cart_start();

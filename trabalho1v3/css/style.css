@@ -65,7 +65,8 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
+  flex-direction: row;
+  /* height: 100%; */
 }
 
 main .flex {
@@ -84,6 +85,14 @@ main .flex {
   width: 100%;
   position: fixed;
   z-index: -10;
+}
+
+.inline {
+  display: inline;
+}
+
+.space {
+  height: 50px;
 }
 
 /*****************************************************************/
@@ -182,7 +191,6 @@ a:hover {
 .cart-container {
   height: 100vh;
   width: 90vw;
-  margin-bottom: 50rem;
 }
 
 .cart-container h2 {
@@ -191,7 +199,7 @@ a:hover {
 }
 
 .cart-container canvas {
-  border: 1px solid black; 
+  border: 1px solid black;
   width: 100%;
   border-radius: 1rem;
   height: 75%;
@@ -199,6 +207,10 @@ a:hover {
 
 .clear-cart-btn {
   padding: 0.2rem 0.5rem;
+}
+
+#remove-item-btn {
+  padding: 0 0.5rem;
 }
 
 /*****************************************************************/
@@ -311,4 +323,5 @@ a:hover {
   h1 {
     font-size: 2.5rem;
   }
+
 }

@@ -190,6 +190,5 @@ function getCubeTexturesList() {
     "./resources/textures/cube/paintings.png",
     "./resources/textures/cube/flower.png",
     "./resources/textures/cube/fabrics.png",
-    "./resources/textures/cube/jjuliar.png",
   ]
 }

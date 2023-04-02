@@ -30,7 +30,6 @@ function loadImages(urls, callback) {
     --imagesToLoad;
     if (!imagesToLoad) {
       callback(images);
-      return images;
     }
   };
 
@@ -39,8 +38,6 @@ function loadImages(urls, callback) {
     images.push(image);
   }
 }
-
-
 
 // local storage
 function getCartItems() {
@@ -54,6 +51,6 @@ function saveCartItems(cartItems) {
   // var items = cartItems.map((item) => {
   // return [item.]
   // })
-  console.log(cartItems)
+  console.log("salvando...");
   localStorage.setItem("cartItems", JSON.stringify(cartItems));
 }

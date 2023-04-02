@@ -54,7 +54,6 @@ function buyItem(numItem) {
   cartCounter++;
   cartCounterDiv.textContent = cartCounter;
   cartItems.push(indexShapes[numItem]);
-  console.log(cartItems);
 }
 
 function index_start() {
@@ -92,13 +91,10 @@ function index_start() {
     var shapes = [];
     var texAux = 0;
     for (let i = 0; i < number; ++i) {
-      if (texAux == cubeTextures.element) texAux = 0;
+      if (texAux >= cubeTextures.length)
+        texAux = 0;
+
       shapes.push({
-        // translation: [Math.random() * mult1, Math.random() * mult1, 0],
-        // translation: [0, 0, 0],
-        // rotation: [50, 100, 50],
-        // rotation: [degToRad(Math.random() * 75), degToRad(Math.random() * 75), degToRad(Math.random() * 75)],
-        // scale: [0.2 * mult2, 0.2 * mult2, 0.2 * mult2],
         color: [Math.random(), Math.random(), Math.random(), 1],
         texture: texAux++,
         price: Math.round(Math.random() * 50)

@@ -68,12 +68,18 @@ function cart_main(cartItems, textures) {
   var normalize = true;  // convert from 0-255 to 0.0-1.0
   cGl.vertexAttribPointer(cTextCoordAttribLoc, 2, cGl.FLOAT, normalize, 0, 0);
 
-  // setup ui
-  var camera = [0, 0, 0];
 
-  webglLessonsUI.setupSlider("#xCamera", {value: radToDeg(camera[0]), slide: updateCameraAngle(0), min: -360, max: 360});
-  webglLessonsUI.setupSlider("#yCamera", {value: radToDeg(camera[1]), slide: updateCameraAngle(1), min: -360, max: 360});
-  webglLessonsUI.setupSlider("#zCamera", {value: radToDeg(camera[2]), slide: updateCameraAngle(2), min: -360, max: 360});
+  // setup ui
+
+  var FOVRadians = degToRad(60);
+  var numItems = cartItems.length;
+
+  var camera = [degToRad(0), degToRad(90), degToRad(0), 20];
+
+  webglLessonsUI.setupSlider("#xCamera", { value: radToDeg(camera[0]), slide: updateCameraAngle(0), min: -180, max: 180 });
+  webglLessonsUI.setupSlider("#yCamera", { value: radToDeg(camera[1]), slide: updateCameraAngle(1), min: -180, max: 180 });
+  webglLessonsUI.setupSlider("#zCamera", { value: radToDeg(camera[2]), slide: updateCameraAngle(2), min: -180, max: 180 });
+  webglLessonsUI.setupSlider("#distance", { value: camera[3], slide: updateDistance(), min: 0, max: 100 });
 
   function updateCameraAngle(index) {
     return function (event, ui) {
@@ -82,8 +88,12 @@ function cart_main(cartItems, textures) {
     }
   }
 
-  var FOVRadians = degToRad(60);
-  var numItems = cartItems.length;
+  function updateDistance() {
+    return function (event, ui) {
+      camera[3] = ui.value;
+      drawCartShapes(loadedImages);
+    }
+  }
 
   // var then = 0;
   // var deltaTime;
@@ -116,11 +126,12 @@ function cart_main(cartItems, textures) {
     var camMatrix = m4.xRotation(camera[0]);
     camMatrix = m4.yRotate(camMatrix, camera[1]);
     camMatrix = m4.zRotate(camMatrix, camera[2]);
-    camMatrix = m4.translate(camMatrix, 0, 0, numItems * 1.5)
+    // camMatrix = m4.translate(camMatrix, 0, 0, numItems * 1.5);
+    camMatrix = m4.translate(camMatrix, 0, 0, camera[3]);
     var viewMatrix = m4.inverse(camMatrix);
     var viewProjectionMatrix = m4.multiply(projMatrix, viewMatrix);
 
-    var texture;
+    var texture, x, y, z, auxX = 0, auxY = 0, auxZ = 3;
     for (let index = 0; index < numItems; ++index) {
       // cartItems[index].rotation[0] += Math.sin(0.2 * deltaTime);
       // cartItems[index].rotation[1] += 1.5 * deltaTime;
@@ -135,13 +146,20 @@ function cart_main(cartItems, textures) {
       cGl.texImage2D(cGl.TEXTURE_2D, 0, cGl.RGBA, cGl.RGBA, cGl.UNSIGNED_BYTE, images[cartItems[index].texture]);
       cGl.generateMipmap(cGl.TEXTURE_2D);
 
-      var angle = index * Math.PI * 2 / numItems;
-      var x = Math.cos(angle) * numItems;
-      var z = Math.sin(angle) * numItems;
-      var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
+      // var angle = index * Math.PI * 2 / numItems;
+      // var x = Math.cos(angle) * numItems;
+      // var z = Math.sin(angle) * numItems;
+      // var matrix = m4.translate(viewProjectionMatrix, x, 0, z);
 
-      // var offset = index * 2;
-      // var matrix = m4.translate(viewProjectionMatrix, 0 + offset, 0 + offset, 0);
+      x = 0;
+      y = -(camera[3]-1) + auxY++ * 2;
+      z = -1 + auxZ * 2;
+      if (y > camera[3]-2) {
+        --auxZ;
+        auxY = 0;
+      }
+
+      var matrix = m4.translate(viewProjectionMatrix, x, y, z);
 
       cGl.uniformMatrix4fv(cMatrixLoc, false, matrix);
       cGl.drawArrays(cGl.TRIANGLES, 0, 36);
