@@ -162,8 +162,8 @@ function setupUI(shapes, index) {
 
 
 function mainCalls(index, SHAPES) {
-  iGl = getGLContext(`canvas${index}`);
-  iProgram = createProgramFromSources(iGl, [vertexShaderIndex, fragmentShaderIndex]);
+  iGl = getGlContext(`canvas${index}`);
+  iProgram = webglUtils.createProgramFromSources(iGl, [vertexShaderIndex, fragmentShaderIndex]);
   setIndexWebGl(iGl, SHAPES, index);
   // drawIndexShape(iGl, SHAPES, index);
   return iGl;

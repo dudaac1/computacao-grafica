@@ -15,11 +15,6 @@ function cart_start() {
 
   setCartItensValue();
 
-  //cartI
-
-  // var canvasWidth = document.getElementById("cart-canvas").getBoundingClientRect().width;
-  // var cartShapes = generateCartShapes(2, canvasWidth);
-
   var clearCartBtn = document.getElementById("clear-cart");
   clearCartBtn.addEventListener("click", function () {
     if (cartCounter != 0) {
@@ -28,6 +23,7 @@ function cart_start() {
       cartCounter = 0;
       cartPrice = 0;
       setCartItensValue();
+      saveCartItems([]);
       cart_main(cartItems, textures);
     }
   });

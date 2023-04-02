@@ -34,11 +34,11 @@ function setCubeGeometry(gl) {
 
       //back face
       1, 1, 1,
-      1, -1, 1,
+      -1, 1, 1,
       -1, -1, 1,
 
       -1, -1, 1,
-      -1, 1, 1,
+      1, -1, 1,
       1, 1, 1,
 
       // right face
