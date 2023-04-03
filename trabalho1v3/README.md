@@ -8,7 +8,7 @@ Uma vitrine com objetos 3D onde o usuário pode olhar itens, trocar cores e text
 
 ✔ Deve-se ter controles para animar os objetos em rotação e zoom.
 
-Animação pré-definida da curva usando curvas.
+(❓) Animação pré-definida da curva usando curvas.
 
 ✔ Usar modelos que tenham textura e com cor única, permitindo que ambas possam ser trocadas. Para a textura, basta uma cor diferente que já será considerado uma textura diferente.
 
@@ -16,4 +16,4 @@ Animação pré-definida da curva usando curvas.
 
 <strike>O menu principal de navegação da página deve usar WebGL, mas não precisa ser 3D.</strike>
 
-✔ O fundo da página deve ser uma animação em WebGL.
+❌ O fundo da página deve ser uma animação em WebGL.
