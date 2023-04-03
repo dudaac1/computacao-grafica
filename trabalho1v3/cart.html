@@ -41,7 +41,7 @@
             (R$ <span id="cart-price-span"></span>)
           </div>
         </h2>
-        <button id="clear-cart" class="clear-cart-btn">Limpar carrinho</button>
+        <button id="clear-cart" class="clear-cart-btn" onclick="clearCart()">Limpar carrinho</button>
       </div>
       <div class="space flex">
         <div id="uiContainer">
@@ -56,16 +56,18 @@
           <label for="cart-items">Remover item:</label>
           <select name="cart-items" id="cart-items-select">
           </select>
-          <button id="remove-item-btn">OK</button>
+          <button id="remove-item-btn" onclick="removeItemFromCart()">OK</button>
         </div>
       </div>
       <canvas id="cart-canvas"></canvas>
     </div>
   </main>
-
+  
   <footer>
     <small>
       <center>
+        <button id="animate-btn">Clique me!</button>
+        <br>
         Copyright © Eduarda Carvalho | eduarda.carvalho@inf.ufpel.edu.br
       </center>
     </small>
@@ -74,12 +76,9 @@
   <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
   <script src="https://webgl2fundamentals.org/webgl/resources/webgl-lessons-ui.js"></script>
   <script src="js/obj-cube.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/matrix4.js"></script>
-  <!-- <script src="js/matrix4-old.js"></script> -->
-  <!-- <script src="js/utils-webgl.js"></script> -->
+  <script src="js/utils.js"></script>
   <script src="js/cart-webgl.js"></script>
-  <!-- <script src="js/cart2.js"></script> -->
   <script src="js/cart.js"></script>
 
 </body>

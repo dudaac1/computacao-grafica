@@ -1,7 +1,7 @@
 "use strict";
 
 const NUMBER_OBJS = 8;
-let cartCounter, cartCounterDiv, indexShapes;
+let cartCounter = 0, cartCounterDiv, indexShapes;
 var cartItems;
 
 function generateIndexCards() {
@@ -62,18 +62,17 @@ function index_start() {
     cartCounter = cartItems.length;
   else {
     cartItems = [];
-    cartCounter = 0;
   }
   
   cartCounterDiv = document.getElementById("cart-counter");
   cartCounterDiv.textContent = cartCounter;
 
   // set function for cart button
-  var cartBtn = document.getElementById("cart-button");
-  cartBtn.addEventListener("click", function () {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    location.href = "./cart.html";
-  })
+  // var cartBtn = document.getElementById("cart-button");
+  // cartBtn.addEventListener("click", function () {
+  //   localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  //   location.href = "./cart.html";
+  // })
 
   // set update cartCounter in local storage before reload
   window.addEventListener("beforeunload", function () {

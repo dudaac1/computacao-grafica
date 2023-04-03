@@ -38,7 +38,7 @@ var cubeTextures, tAux = 0;
 
 var iCamera = [degToRad(0), degToRad(0), degToRad(0), 4];
 
-function setIndexWebGl(gl, shapes, index) {
+async function setIndexWebGl(gl, shapes, index) {
   iPosAttribLoc = gl.getAttribLocation(iProgram, "a_position");
   iColorAttribLoc = gl.getAttribLocation(iProgram, "a_color");
   iTextCoordAttribLoc = gl.getAttribLocation(iProgram, "a_texcoord");
@@ -85,6 +85,7 @@ function setIndexWebGl(gl, shapes, index) {
   // Asynchronously load an image
   var image = new Image();
   image.src = cubeTextures[shapes[index].texture];
+  image.decode();
   image.addEventListener('load', function () {
     gl.bindTexture(gl.TEXTURE_2D, iTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -171,6 +172,7 @@ function mainCalls(index, SHAPES) {
 
 function index_main(NUMBER_OBJS, SHAPES) {
   cubeTextures = getCubeTexturesList();
+
   var gl;
   for (let i = 0; i < NUMBER_OBJS; ++i) {
     gl = mainCalls(i, SHAPES);

@@ -1,6 +1,6 @@
 "use strict";
 
-const vs = `#version 300 es
+const vertexShaderBg = `#version 300 es
   in vec4 a_position;
   in vec3 a_normal;
   in vec3 a_tangent;
@@ -32,7 +32,7 @@ const vs = `#version 300 es
   }
 `;
 
-const fs = `#version 300 es
+const fragmentShaderBg = `#version 300 es
   precision highp float;
 
   in vec3 v_normal;
@@ -86,13 +86,11 @@ const fs = `#version 300 es
 `;
 
 function parseOBJ(text) {
-  // because indices are base 1 let's just fill in the 0th data
   const objPositions = [[0, 0, 0]];
   const objTexcoords = [[0, 0]];
   const objNormals = [[0, 0, 0]];
   const objColors = [[0, 0, 0]];
 
-  // same order as `f` indices
   const objVertexData = [
     objPositions,
     objTexcoords,
@@ -100,7 +98,6 @@ function parseOBJ(text) {
     objColors,
   ];
 
-  // same order as `f` indices
   let webglVertexData = [
     [],   // positions
     [],   // texcoords
@@ -282,7 +279,7 @@ function parseMTL(text) {
     const parts = line.split(/\s+/).slice(1);
     const handler = keywords[keyword];
     if (!handler) {
-      console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
+      // console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
       continue;
     }
     handler(parts, unparsedArgs);
@@ -334,7 +331,6 @@ function generateTangents(position, texcoord, indices) {
     const duv12 = subtractVector2(uv2, uv1);
     const duv13 = subtractVector2(uv3, uv1);
 
-
     const f = 1.0 / (duv12[0] * duv13[1] - duv13[0] * duv12[1]);
     const tangent = Number.isFinite(f)
       ? m4.normalize(m4.scaleVector(m4.subtractVectors(
@@ -349,222 +345,154 @@ function generateTangents(position, texcoord, indices) {
   return tangents;
 }
 
-async function main(urlObj) {
-  /** @type {HTMLCanvasElement} */
-  const canvas = document.querySelector("#bg-canvas");
-  const gl = canvas.getContext("webgl2");
-  if (!gl) {
-    return;
-  }
-
+async function main(urlObjs) {
+  const gl = getGlContext("bg-canvas");
   twgl.setAttributePrefix("a_");
-
-
-
-  const meshProgramInfo = twgl.createProgramInfo(gl, [vs, fs]);
-
-  // const objHref = 'https://webgl2fundamentals.org/webgl/resources/models/windmill/windmill.obj';  
-  const objHref = urlObj;
-  const response = await fetch(objHref);
-  const text = await response.text();
-  const obj = parseOBJ(text);
-  const baseHref = new URL(objHref, window.location.href);
-  const matTexts = await Promise.all(obj.materialLibs.map(async filename => {
-    const matHref = new URL(filename, baseHref).href;
-    const response = await fetch(matHref);
-    return await response.text();
-  }));
-  const materials = parseMTL(matTexts.join('\n'));
-
+  const meshProgramInfo = twgl.createProgramInfo(gl, [vertexShaderBg, fragmentShaderBg]);
+  
   const textures = {
     defaultWhite: twgl.createTexture(gl, { src: [255, 255, 255, 255] }),
     defaultNormal: twgl.createTexture(gl, { src: [127, 127, 255, 0] }),
   };
 
-  for (const material of Object.values(materials)) {
-    Object.entries(material)
-      .filter(([key]) => key.endsWith('Map'))
-      .forEach(([key, filename]) => {
-        let texture = textures[filename];
-        if (!texture) {
-          const textureHref = new URL(filename, baseHref).href;
-          texture = twgl.createTexture(gl, { src: textureHref, flipY: true });
-          textures[filename] = texture;
-        }
-        material[key] = texture;
-      });
-  }
+  urlObjs.forEach(async (url, index) => {
+    let objHref = url;
+    let response = await fetch(objHref);
+    let text = await response.text();
+    let obj = parseOBJ(text);
+    let baseHref = new URL(objHref, window.location.href);
+    let matTexts = await Promise.all(obj.materialLibs.map(async filename => {
+      let matHref = new URL(filename, baseHref).href;
+      let response = await fetch(matHref);
+      return await response.text();
+    }));
+    let materials = parseMTL(matTexts.join('\n'));
 
-  Object.values(materials).forEach(m => {
-    m.shininess = 25;
-    m.specular = [3, 2, 1];
-  });
-
-  const defaultMaterial = {
-    diffuse: [1, 1, 1],
-    diffuseMap: textures.defaultWhite,
-    normalMap: textures.defaultNormal,
-    ambient: [0, 0, 0],
-    specular: [1, 1, 1],
-    specularMap: textures.defaultWhite,
-    shininess: 300,
-    opacity: 1,
-  };
-
-  const parts = obj.geometries.map(({ material, data }) => {
-    if (data.color) {
-      if (data.position.length === data.color.length) {
-        data.color = { numComponents: 3, data: data.color };
-      }
-    } else {
-      data.color = { value: [1, 1, 1, 1] };
-    }
-    if (data.texcoord && data.normal) {
-      data.tangent = generateTangents(data.position, data.texcoord);
-    } else {
-      data.tangent = { value: [1, 0, 0] };
-    }
-    if (!data.texcoord) {
-      data.texcoord = { value: [0, 0] };
-    }
-    if (!data.normal) {
-      data.normal = { value: [0, 0, 1] };
+    for (let material of Object.values(materials)) {
+      Object.entries(material)
+        .filter(([key]) => key.endsWith('Map'))
+        .forEach(([key, filename]) => {
+          let texture = textures[filename];
+          if (!texture) {
+            let textureHref = new URL(filename, baseHref).href;
+            texture = twgl.createTexture(gl, { src: textureHref, flipY: true });
+            textures[filename] = texture;
+          }
+          material[key] = texture;
+        });
     }
 
-    const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
-    const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
-    return {
-      material: {
-        ...defaultMaterial,
-        ...materials[material],
-      },
-      bufferInfo,
-      vao,
-    };
-  });
-
-  function getExtents(positions) {
-    const min = positions.slice(0, 3);
-    const max = positions.slice(0, 3);
-    for (let i = 3; i < positions.length; i += 3) {
-      for (let j = 0; j < 3; ++j) {
-        const v = positions[i + j];
-        min[j] = Math.min(v, min[j]);
-        max[j] = Math.max(v, max[j]);
-      }
-    }
-    return { min, max };
-  }
-
-  function getGeometriesExtents(geometries) {
-    return geometries.reduce(({ min, max }, { data }) => {
-      const minMax = getExtents(data.position);
-      return {
-        min: min.map((min, ndx) => Math.min(minMax.min[ndx], min)),
-        max: max.map((max, ndx) => Math.max(minMax.max[ndx], max)),
-      };
-    }, {
-      min: Array(3).fill(Number.POSITIVE_INFINITY),
-      max: Array(3).fill(Number.NEGATIVE_INFINITY),
+    Object.values(materials).forEach(m => {
+      m.shininess = 25;
+      m.specular = [3, 2, 1];
     });
-  }
 
-  const extents = getGeometriesExtents(obj.geometries);
-  const range = m4.subtractVectors(extents.max, extents.min);
-  // const objOffset = m4.scaleVector(m4.addVectors(extents.min,  m4.scaleVector(range, 0.5)), 1);
-  // console.log(range)
-  const objOffset = m4.scaleVector(m4.addVectors(extents.min, m4.scaleVector(range, 0.5)), -1);
+    let defaultMaterial = {
+      diffuse: [1, 1, 1],
+      diffuseMap: textures.defaultWhite,
+      normalMap: textures.defaultNormal,
+      ambient: [0, 0, 0],
+      specular: [1, 1, 1],
+      specularMap: textures.defaultWhite,
+      shininess: 300,
+      opacity: 1,
+    };
+
+    let parts = obj.geometries.map(({ material, data }) => {
+      if (data.color) {
+        if (data.position.length === data.color.length) {
+          data.color = { numComponents: 3, data: data.color };
+        }
+      } else {
+        data.color = { value: [1, 1, 1, 1] };
+      }
+      if (data.texcoord && data.normal) {
+        data.tangent = generateTangents(data.position, data.texcoord);
+      } else {
+        data.tangent = { value: [1, 0, 0] };
+      }
+      if (!data.texcoord) {
+        data.texcoord = { value: [0, 0] };
+      }
+      if (!data.normal) {
+        data.normal = { value: [0, 0, 1] };
+      }
+
+      const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
+      const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
+      return {
+        material: {
+          ...defaultMaterial,
+          ...materials[material],
+        },
+        bufferInfo,
+        vao,
+      };
+    });
+
+    render(parts, index);
+    if (index) {
+      ++index;
+      render(parts, index);
+    }
+  });
 
   const cameraTarget = [0, 0, 0];
-  const radius = m4.length(range) * 0.5;
+  const radius = gl.canvas.clientWidth / 2;
   const cameraPosition = m4.addVectors(cameraTarget, [0, 0, radius * 2,]);
   const zNear = radius / 100;
   const zFar = radius * 3;
 
-  function degToRad(deg) {
-    return deg * Math.PI / 180;
-  }
+  const fieldOfViewRadians = degToRad(60);
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
 
-  // render();
+  const up = [0, 1, 0];
+  const camera = m4.lookAt(cameraPosition, cameraTarget, up);
+  const view = m4.inverse(camera);
 
-  function render(time) {
-    // time *= 0.001;  // convert to seconds
+  const sharedUniforms = {
+    u_lightDirection: m4.normalize([0, 3, 5]),
+    u_view: view,
+    u_projection: projection,
+    u_viewWorldPosition: cameraPosition,
+  };
 
-    twgl.resizeCanvasToDisplaySize(gl.canvas);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.enable(gl.DEPTH_TEST);
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.enable(gl.DEPTH_TEST);
+  gl.useProgram(meshProgramInfo.program);
+  twgl.setUniforms(meshProgramInfo, sharedUniforms);
 
-    const fieldOfViewRadians = degToRad(60);
-    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+  function render(parts, index) {
+    let u_world = m4.yRotation(0);
+    u_world = m4.translate(u_world, ...[0, 0, 0]);
 
-    const up = [0, 1, 0];
-    const camera = m4.lookAt(cameraPosition, cameraTarget, up);
-    const view = m4.inverse(camera);
-
-    const sharedUniforms = {
-      u_lightDirection: m4.normalize([-1, 3, 5]),
-      u_view: view,
-      u_projection: projection,
-      u_viewWorldPosition: cameraPosition,
-    };
-
-    gl.useProgram(meshProgramInfo.program);
-    twgl.setUniforms(meshProgramInfo, sharedUniforms);
-    let u_world = m4.yRotation(time);
-    u_world = m4.translate(u_world, ...objOffset);
-
-    ////////////
-    ////////////
-    ////////////
-    ////////////
-    if (urlObj == "./resources/objs/plant1/Plant N310122.obj")
-      m4.translate(u_world, -300, -100, 300, u_world);
+    switch (index) {
+      case 0:
+        m4.translate(u_world, 0, -100, 0, u_world);
+        break;
+      case 1:
+        m4.translate(u_world, radius, -50, 0, u_world);
+        m4.yRotate(u_world, 0, 0, 0, u_world);
+        break;
+      case 2:
+        m4.translate(u_world, -radius, -50, 0, u_world);
+        m4.yRotate(u_world, 0, 0, 0, u_world);
+        break;
+    }
 
     for (const { bufferInfo, vao, material } of parts) {
       gl.bindVertexArray(vao);
-      twgl.setUniforms(meshProgramInfo, {
-        u_world,
-      }, material);
+      twgl.setUniforms(meshProgramInfo, { u_world }, material);
       twgl.drawBufferInfo(gl, bufferInfo);
     }
-
-    // requestAnimationFrame(render);
   }
-
-  render(0);
-  // requestAnimationFrame(render);
 }
 
-main('./resources/objs/plant1/Plant N310122.obj');
-// main('./plant2/Plant origami pot N100622.obj');
+const objsToDraw = [
+  './resources/objs/plant2/Plant origami pot N100622.obj',
+  './resources/objs/plant1/Plant N310122.obj',
+]
 
-
-// main('./plant1/Plant N310122.obj');
-
-
-
-
-
-
-
-// function bg_start() {
-//   var main = document.getElementById("main-container");
-//   var canvas = document.createElement("canvas");
-//   canvas.setAttribute("id", "bg-canvas");
-//   canvas.classList = "bg-canvas";
-//   main.appendChild(canvas);
-
-//   // var bShape = {
-//   //   translation: [200, 200, 0],
-//   //   rotation: [20, 15, 10],
-//   //   scale: [1, 1, 1],
-//   //   color: [Math.random(), Math.random(), Math.random(), 1]
-//   // }
-
-//   var bGl = canvas.getContext("webgl2");
-//   bg_main(bGl, './resources/objs/plant1/Plant N310122.obj');
-//   // bg_main(bGl, './resources/objs/plant2/Plant origami pot N100622.obj');
-// }
-
-// bg_start();
+main(objsToDraw);

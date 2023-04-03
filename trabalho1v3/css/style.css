@@ -82,9 +82,10 @@ main .flex {
 }
 
 .bg-canvas {
-  width: 100%;
+  width: 90%;
   position: fixed;
   z-index: -10;
+  opacity: 0.75;
 }
 
 .inline {
@@ -212,6 +213,22 @@ a:hover {
 #remove-item-btn {
   padding: 0 0.5rem;
 }
+
+#animate-btn {
+  color: var(--primary-color);
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  border: 1px solid var(--primary-color);
+  padding: 0.25rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+#animate-btn:disabled {
+  background-color: grey;
+  cursor: wait;
+} 
 
 /*****************************************************************/
 /*                        WEBGL LESSONS UI                       */
